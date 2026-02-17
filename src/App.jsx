@@ -23,6 +23,24 @@ import {
   Clock,
   FileText
 } from 'lucide-react';
+import {
+  SiLaravel,
+  SiPhp,
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiTailwindcss,
+  SiGraphql,
+  SiMysql,
+  SiPostgresql,
+  SiDocker,
+  SiAmazon,
+  SiVercel,
+  SiStripe,
+  SiGit,
+  SiWordpress,
+  SiNodedotjs,
+} from 'react-icons/si';
 
 // --- Components ---
 
@@ -43,7 +61,7 @@ const Button = ({ children, variant = 'primary', className = '', onClick, icon: 
   );
 };
 
-const SectionHeading = ({ badge, title, subtitle, center = false }) => (
+const SectionHeading = ({ badge, title, subtitle, center = true }) => (
   <div className={`mb-12 ${center ? 'text-center' : ''}`}>
     {badge && (
       <span className="inline-block py-1 px-3 rounded-full bg-blue-900/30 text-blue-400 text-xs font-mono tracking-wider mb-4 border border-blue-800/50">
@@ -207,7 +225,7 @@ const BlueprintGenerator = () => {
       <div className="p-6 md:p-8">
         {!blueprint ? (
           <div className="space-y-6">
-             <p className="text-slate-400">Describe your app idea below. My architectural AI model will generate a recommended tech stack, identify risks, and estimate a timeline.</p>
+             <p className="text-slate-400">Describe your app idea below. Our architectural AI model will generate a recommended tech stack, identify risks, and estimate a timeline.</p>
              <div className="relative">
                 <textarea 
                   value={idea}
@@ -343,6 +361,7 @@ export default function App() {
             
             <div className="hidden md:flex items-center space-x-8">
               <a href="#services" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Capabilities</a>
+              <a href="#process" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Process</a>
               <a href="#work" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Selected Work</a>
               <a href="#philosophy" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Philosophy</a>
               <Button variant="primary" className="px-5 py-2 text-sm" onClick={() => document.getElementById('contact').scrollIntoView({behavior: 'smooth'})}>
@@ -362,6 +381,7 @@ export default function App() {
           <div className="md:hidden bg-slate-900 border-b border-slate-800">
             <div className="px-4 pt-2 pb-6 space-y-2">
               <a href="#services" className="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Capabilities</a>
+              <a href="#process" className="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Process</a>
               <a href="#work" className="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Selected Work</a>
               <a href="#philosophy" className="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-800">Philosophy</a>
               <div className="pt-4">
@@ -391,11 +411,11 @@ export default function App() {
                 </div>
                 
                 <h1 className="text-5xl lg:text-7xl font-bold text-white tracking-tight mb-6 leading-tight">
-                  I Engineer <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Scalable Products</span> for Visionaries.
+                  We Engineer <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Scalable Products</span> for Visionaries.
                 </h1>
                 
                 <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                  Stop hiring "coders." Partner with a Technical Architect who bridges the gap between complex business logic and high-performance execution. Specializing in Laravel, React, and Enterprise Architecture.
+                  Stop hiring "coders." Partner with a boutique engineering studio that bridges the gap between complex business logic and high-performance execution. Specializing in Laravel, React, and Enterprise Architecture.
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -411,7 +431,6 @@ export default function App() {
                   <span className="text-sm font-semibold text-slate-500">TRUSTED BY:</span>
                   <div className="h-6 w-24 bg-slate-800/50 rounded flex items-center justify-center text-xs font-bold text-slate-500">Third & Grove</div>
                   <div className="h-6 w-24 bg-slate-800/50 rounded flex items-center justify-center text-xs font-bold text-slate-500">CA Closets</div>
-                  <div className="h-6 w-24 bg-slate-800/50 rounded flex items-center justify-center text-xs font-bold text-slate-500">Angel Studios</div>
                 </div>
               </div>
 
@@ -429,13 +448,13 @@ export default function App() {
                   </div>
                   <div className="p-6 font-mono text-sm leading-relaxed overflow-x-auto">
                     <div className="text-slate-400">
-                      <span className="text-purple-400">const</span> <span className="text-yellow-200">Engineer</span> = <span className="text-blue-300">{`{`}</span>
+                      <span className="text-purple-400">const</span> <span className="text-yellow-200">Studio</span> = <span className="text-blue-300">{`{`}</span>
                     </div>
                     <div className="pl-4">
-                      <span className="text-red-300">"name"</span>: <span className="text-green-300">"Mark Ward"</span>,
+                      <span className="text-red-300">"name"</span>: <span className="text-green-300">"WARD Studio"</span>,
                     </div>
                     <div className="pl-4">
-                      <span className="text-red-300">"role"</span>: <span className="text-green-300">"Technical Architect"</span>,
+                      <span className="text-red-300">"type"</span>: <span className="text-green-300">"Boutique Engineering Studio"</span>,
                     </div>
                     <div className="pl-4">
                       <span className="text-red-300">"core_stack"</span>: <span className="text-blue-300">[</span>
@@ -450,7 +469,7 @@ export default function App() {
                       <span className="text-red-300">"focus"</span>: <span className="text-green-300">"Scalability & ROI"</span>,
                     </div>
                     <div className="pl-4">
-                      <span className="text-red-300">"status"</span>: <span className="text-green-300">"Online"</span>
+                      <span className="text-red-300">"status"</span>: <span className="text-green-300">"Accepting Clients"</span>
                     </div>
                     <div className="text-blue-300">{`}`};</div>
                     
@@ -470,7 +489,7 @@ export default function App() {
             <SectionHeading 
               badge="CAPABILITIES" 
               title="From MVP to Enterprise Scale"
-              subtitle="I don't just write code. I build digital assets that grow with your business." 
+              subtitle="We don't just write code. We build digital assets that grow with your business." 
             />
             
             <div className="grid md:grid-cols-3 gap-8">
@@ -492,6 +511,71 @@ export default function App() {
                 description="Fractional CTO services for non-technical founders. I help map out your database schema, API strategy, and CI/CD pipelines before a single line of code is written."
                 tags={['System Design', 'Consulting', 'AWS', 'Roadmapping']}
               />
+            </div>
+          </div>
+        </section>
+
+        {/* Process Section */}
+        <section id="process" className="py-20 lg:py-32 bg-slate-950 border-t border-slate-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectionHeading
+              badge="HOW WE WORK"
+              title="From Concept to Execution."
+              subtitle="A proven process that keeps projects on time, on budget, and on strategy."
+              center
+            />
+
+            <div className="relative">
+              {/* Connector line */}
+              <div className="hidden lg:block absolute top-12 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {[
+                  {
+                    step: '01',
+                    title: 'Discovery',
+                    description: 'We start by listening. A deep-dive into your business goals, users, and constraints before any code is considered.',
+                    icon: FileText,
+                    color: 'text-blue-400',
+                    bg: 'bg-blue-900/20 border-blue-800/40',
+                  },
+                  {
+                    step: '02',
+                    title: 'Architecture',
+                    description: 'We map the system. Database schema, API contracts, infrastructure plan, and tech stack — decided before sprint one.',
+                    icon: Layers,
+                    color: 'text-indigo-400',
+                    bg: 'bg-indigo-900/20 border-indigo-800/40',
+                  },
+                  {
+                    step: '03',
+                    title: 'Build & Iterate',
+                    description: 'Transparent, sprint-based development with regular demos. You see progress every week, not just at the finish line.',
+                    icon: Code,
+                    color: 'text-violet-400',
+                    bg: 'bg-violet-900/20 border-violet-800/40',
+                  },
+                  {
+                    step: '04',
+                    title: 'Launch & Scale',
+                    description: 'Deployment, monitoring, and handoff — with documentation your team can actually use. We don\'t disappear at launch.',
+                    icon: Server,
+                    color: 'text-purple-400',
+                    bg: 'bg-purple-900/20 border-purple-800/40',
+                  },
+                ].map(({ step, title, description, icon: Icon, color, bg }) => (
+                  <div key={step} className="relative flex flex-col items-center text-center group">
+                    <div className={`relative z-10 w-24 h-24 rounded-2xl border ${bg} flex items-center justify-center mb-6 group-hover:scale-105 transition-transform duration-300`}>
+                      <Icon size={32} className={color} strokeWidth={1.5} />
+                      <span className="absolute -top-3 -right-3 w-7 h-7 rounded-full bg-slate-900 border border-slate-700 text-xs font-bold font-mono text-slate-400 flex items-center justify-center">
+                        {step}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-100 mb-3">{title}</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">{description}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -551,69 +635,67 @@ export default function App() {
             <div className="flex flex-col md:flex-row gap-16 items-center">
               <div className="w-full md:w-1/2">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                  The "Lead Engineer" Difference.
+                  The Boutique Studio Advantage.
                 </h2>
                 <div className="space-y-6 text-lg text-slate-400 leading-relaxed">
                   <p>
-                    <span className="text-blue-400 font-semibold">I'm not just a freelancer.</span> I'm a father, a basketball coach, and a technical leader who understands that discipline wins games.
+                    <span className="text-blue-400 font-semibold">We're not an agency with a sales team and rotating junior devs.</span> WARD Studio is a boutique studio — senior-led, intentionally small, and obsessively focused on craft.
                   </p>
                   <p>
-                    In software, as in sports, success comes from preparation. My approach isn't about hacking together a quick fix; it's about building a robust system that can handle the pressure of growth.
+                    Every project is led by a principal engineer from discovery through delivery. No hand-offs, no surprises. We treat your product like we own it, because our reputation depends on it.
                   </p>
                   <p>
-                    When you hire me, you aren't just getting code. You're getting a strategic partner who cares about the long-term viability of your business.
+                    When you partner with WARD Studio, you aren't just getting code. You're getting a strategic team that cares about the long-term viability of your business.
                   </p>
                 </div>
                 
-                <div className="mt-8 flex gap-4">
-                   <div className="flex items-center gap-2 text-slate-300">
-                      <CheckCircle size={20} className="text-blue-500" />
-                      <span>Agile Methodology</span>
-                   </div>
-                   <div className="flex items-center gap-2 text-slate-300">
-                      <CheckCircle size={20} className="text-blue-500" />
-                      <span>CI/CD Pipelines</span>
-                   </div>
-                   <div className="flex items-center gap-2 text-slate-300">
-                      <CheckCircle size={20} className="text-blue-500" />
-                      <span>Automated Testing</span>
-                   </div>
+                <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-4">
+                   {[
+                     'Agile Methodology',
+                     'CI/CD Pipelines',
+                     'Automated Testing',
+                     'AI-Assisted Development',
+                     'Full Code Ownership',
+                     'Detailed Documentation',
+                   ].map((item) => (
+                     <div key={item} className="flex items-center gap-2 text-slate-300">
+                       <CheckCircle size={18} className="text-blue-500 flex-shrink-0" />
+                       <span>{item}</span>
+                     </div>
+                   ))}
                 </div>
+                <p className="mt-4 text-sm text-slate-500 leading-relaxed">
+                  We use AI tooling to eliminate boilerplate and accelerate delivery — so our engineers spend their time on the architecture and logic that actually moves your product forward.
+                </p>
               </div>
               
               <div className="w-full md:w-1/2 bg-slate-900 border border-slate-800 rounded-2xl p-8">
-                 <h3 className="text-xl font-bold text-white mb-6">Technical Arsenal</h3>
+                 <h3 className="text-xl font-bold text-white mb-6">Our Stack</h3>
                  
-                 <div className="space-y-6">
-                    <div>
-                      <div className="flex justify-between mb-2">
-                         <span className="text-sm font-medium text-slate-400">Laravel / PHP Ecosystem</span>
-                         <span className="text-sm font-mono text-blue-400">Expert</span>
+                 <div className="grid grid-cols-4 gap-4">
+                    {[
+                      { icon: SiLaravel, label: 'Laravel', color: 'text-red-400' },
+                      { icon: SiPhp, label: 'PHP', color: 'text-indigo-400' },
+                      { icon: SiReact, label: 'React', color: 'text-cyan-400' },
+                      { icon: SiNextdotjs, label: 'Next.js', color: 'text-slate-200' },
+                      { icon: SiTypescript, label: 'TypeScript', color: 'text-blue-400' },
+                      { icon: SiTailwindcss, label: 'Tailwind', color: 'text-teal-400' },
+                      { icon: SiGraphql, label: 'GraphQL', color: 'text-pink-400' },
+                      { icon: SiMysql, label: 'MySQL', color: 'text-orange-300' },
+                      { icon: SiPostgresql, label: 'Postgres', color: 'text-sky-400' },
+                      { icon: SiDocker, label: 'Docker', color: 'text-blue-400' },
+                      { icon: SiAmazon, label: 'AWS', color: 'text-yellow-400' },
+                      { icon: SiVercel, label: 'Vercel', color: 'text-slate-200' },
+                      { icon: SiStripe, label: 'Stripe', color: 'text-violet-400' },
+                      { icon: SiGit, label: 'Git', color: 'text-orange-400' },
+                      { icon: SiWordpress, label: 'WordPress', color: 'text-sky-400' },
+                      { icon: SiNodedotjs, label: 'Node.js', color: 'text-green-400' },
+                    ].map(({ icon: Icon, label, color }) => (
+                      <div key={label} className="group flex flex-col items-center gap-2 p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:border-blue-500/40 hover:bg-slate-800 transition-all duration-200">
+                        <Icon size={28} className={`${color} group-hover:scale-110 transition-transform duration-200`} />
+                        <span className="text-xs font-mono text-slate-400 group-hover:text-slate-200 transition-colors">{label}</span>
                       </div>
-                      <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full w-[95%] bg-blue-600 rounded-full"></div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between mb-2">
-                         <span className="text-sm font-medium text-slate-400">React / Next.js / TypeScript</span>
-                         <span className="text-sm font-mono text-blue-400">Advanced</span>
-                      </div>
-                      <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full w-[90%] bg-blue-600 rounded-full"></div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between mb-2">
-                         <span className="text-sm font-medium text-slate-400">DevOps (Docker, CI/CD, AWS)</span>
-                         <span className="text-sm font-mono text-blue-400">Proficient</span>
-                      </div>
-                      <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                        <div className="h-full w-[85%] bg-blue-600 rounded-full"></div>
-                      </div>
-                    </div>
+                    ))}
                  </div>
               </div>
             </div>
@@ -636,7 +718,7 @@ export default function App() {
            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="text-center mb-12">
                  <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Scale?</h2>
-                 <p className="text-xl text-slate-400">Tell me about your vision. I take on a limited number of partner projects per year to ensure maximum focus.</p>
+                 <p className="text-xl text-slate-400">Tell us about your vision. We take on a limited number of partner projects per year to ensure every client gets our full attention.</p>
               </div>
 
               <div className="bg-slate-950 border border-slate-800 rounded-2xl p-8 md:p-12 shadow-2xl">
@@ -688,7 +770,7 @@ export default function App() {
                     <Button variant="primary" className="w-full py-4 text-lg">
                        Submit Application
                     </Button>
-                    <p className="text-xs text-center text-slate-500 mt-4">I usually respond within 24 hours.</p>
+                    <p className="text-xs text-center text-slate-500 mt-4">Our team reviews every application and responds within one business day.</p>
                  </form>
               </div>
            </div>
@@ -700,9 +782,9 @@ export default function App() {
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left">
                <span className="font-bold text-xl text-white tracking-tight block mb-2">
-                 Mark Ward<span className="text-slate-500 font-normal">.design</span>
+                 WARD<span className="text-slate-500 font-normal"> Studio</span>
                </span>
-               <p className="text-slate-500 text-sm">© 2026 Mark Ward. All rights reserved.</p>
+               <p className="text-slate-500 text-sm">© 2026 WARD Studio LLC. All rights reserved.</p>
             </div>
             
             <div className="flex gap-6">
