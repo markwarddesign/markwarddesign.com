@@ -415,7 +415,7 @@ export default function App() {
                 </h1>
                 
                 <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                  Stop hiring "coders." Partner with a boutique engineering studio that bridges the gap between complex business logic and high-performance execution. Specializing in Laravel, React, and Enterprise Architecture.
+                  Stop hiring "coders." Partner with an independent engineering studio that bridges the gap between complex business logic and high-performance execution. Specializing in Laravel, React, and Enterprise Architecture.
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -454,7 +454,7 @@ export default function App() {
                       <span className="text-red-300">"name"</span>: <span className="text-green-300">"WARD Studio"</span>,
                     </div>
                     <div className="pl-4">
-                      <span className="text-red-300">"type"</span>: <span className="text-green-300">"Boutique Engineering Studio"</span>,
+                      <span className="text-red-300">"type"</span>: <span className="text-green-300">"Independent Engineering Studio"</span>,
                     </div>
                     <div className="pl-4">
                       <span className="text-red-300">"core_stack"</span>: <span className="text-blue-300">[</span>
@@ -635,11 +635,11 @@ export default function App() {
             <div className="flex flex-col md:flex-row gap-16 items-center">
               <div className="w-full md:w-1/2">
                 <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                  The Boutique Studio Advantage.
+                  The Studio Advantage.
                 </h2>
                 <div className="space-y-6 text-lg text-slate-400 leading-relaxed">
                   <p>
-                    <span className="text-blue-400 font-semibold">We're not an agency with a sales team and rotating junior devs.</span> WARD Studio is a boutique studio — senior-led, intentionally small, and obsessively focused on craft.
+                    <span className="text-blue-400 font-semibold">We're not an agency with a sales team and rotating junior devs.</span> WARD Studio is senior-led, intentionally small, and obsessively focused on craft.
                   </p>
                   <p>
                     Every project is led by a principal engineer from discovery through delivery. No hand-offs, no surprises. We treat your product like we own it, because our reputation depends on it.
