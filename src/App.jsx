@@ -460,7 +460,7 @@ const Triptych = ({ onSelect }) => (
               who="funded startups & scaling operators"
               body="Complex platforms, SaaS products, and data-intensive apps built right the first time. Senior-led from architecture through deployment — no handoffs, no surprises. When scope demands it, I bring on trusted collaborators I've worked with for years."
               timeline="3–6+ months"
-              starting="From $25k"
+              starting="By proposal"
               tags={['Laravel', 'React', 'System design', 'Reverb']}
               ctaLabel="Apply for a project"
               onCta={() => onSelect('Full Application', '$15k - $50k')}
@@ -469,7 +469,97 @@ const Triptych = ({ onSelect }) => (
         </div>
       </div>
     </Reveal>
+
+    <EngagementStrip onSelect={onSelect} />
   </section>
+);
+
+/* ---------- ongoing engagement strip ---------- */
+
+const OngoingCard = ({ kicker, title, who, body, format, starting, tags, ctaLabel, onCta }) => (
+  <article className="group flex flex-col h-full p-8 lg:p-10">
+    <div className="flex items-center justify-between mb-6 text-[10px] font-mono uppercase tracking-[0.2em] text-ink-quiet">
+      <span className="text-accent">{kicker}</span>
+      <span>Ongoing</span>
+    </div>
+    <h3 className="font-display font-medium text-3xl lg:text-4xl leading-[1] tracking-tighter2 mb-3 text-ink-900">
+      {title}
+    </h3>
+    <p className="text-sm text-ink-quiet mb-5">For {who}</p>
+    <p className="text-ink-soft leading-relaxed mb-8">{body}</p>
+
+    <div className="grid grid-cols-2 gap-x-6 gap-y-4 pt-5 mb-6 border-t border-ink-900/15">
+      <div>
+        <div className="text-[10px] font-mono uppercase tracking-[0.2em] mb-1 text-ink-quiet">Format</div>
+        <div className="font-medium text-sm">{format}</div>
+      </div>
+      <div>
+        <div className="text-[10px] font-mono uppercase tracking-[0.2em] mb-1 text-ink-quiet">Starting</div>
+        <div className="font-medium text-sm">{starting}</div>
+      </div>
+    </div>
+
+    <div className="flex flex-wrap gap-1.5 mb-8">
+      {tags.map((t) => (
+        <span key={t} className="text-[11px] font-mono px-2 py-1 rounded border border-ink-900/15 text-ink-quiet">
+          {t}
+        </span>
+      ))}
+    </div>
+
+    <button
+      onClick={onCta}
+      className="mt-auto inline-flex items-center justify-between gap-2 text-sm font-medium pt-5 border-t border-ink-900/15 text-ink-900 hover:text-accent group/cta transition-colors"
+    >
+      {ctaLabel}
+      <ArrowUpRight size={18} className="transition-transform group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5" />
+    </button>
+  </article>
+);
+
+const EngagementStrip = ({ onSelect }) => (
+  <div className="max-w-[1400px] mx-auto px-6 lg:px-10 pt-16 lg:pt-20 pb-24 lg:pb-32">
+    <Reveal as="div" className="flex items-baseline gap-6 mb-10">
+      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet whitespace-nowrap">
+        Or — ongoing
+      </span>
+      <span className="h-px flex-1 bg-ink-900/15" />
+      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet whitespace-nowrap">
+        04 · 05
+      </span>
+    </Reveal>
+
+    <Reveal>
+      <div className="grid lg:grid-cols-2 border border-ink-900/15 bg-paper">
+        <div className="border-b lg:border-b-0 lg:border-r border-ink-900/15">
+          <OngoingCard
+            kicker="04 · Advisory"
+            title="Advisory"
+            who="CTOs, founders, teams needing a second opinion"
+            body="Architecture reviews, technical due diligence, and second-opinion calls. Bring me in when you're stuck on a hard decision or want a senior set of eyes before you commit. No long engagement required."
+            format="Hourly or sprint"
+            starting="From $2k / review"
+            tags={['Architecture', 'Due diligence', 'Code review']}
+            ctaLabel="Book a session"
+            onCta={() => onSelect('Advisory', '<$5k')}
+          />
+        </div>
+        <div>
+          <OngoingCard
+            kicker="05 · Retainer"
+            title="Retainer"
+            who="funded teams who want me in their corner"
+            body="Reserved hours each month, async Slack access, code reviews, roadmap input, and occasional implementation. The right fit when you don't need a full project but want senior engineering on tap."
+            format="Monthly · 3-mo min."
+            starting="By engagement"
+            tags={['Reserved hours', 'Async access', 'Roadmap']}
+            ctaLabel="Start a retainer"
+            onCta={() => onSelect('Retainer', '$5k - $15k')}
+          />
+        </div>
+      </div>
+    </Reveal>
+  </div>
 );
 
 /* ---------- selected work ---------- */
@@ -880,8 +970,8 @@ const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSelectedB
 
           <div>
             <label className="block text-[10px] font-mono uppercase tracking-[0.2em] text-ink-quiet mb-3">Project stage</label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {['Website Build', 'MVP to Life', 'Full Application', 'Enterprise'].map((stage) => (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {['Website Build', 'MVP to Life', 'Full Application', 'Advisory', 'Retainer', 'Enterprise'].map((stage) => (
                 <label key={stage} className="cursor-pointer">
                   <input type="radio" name="stage" className="peer sr-only" checked={selectedStage === stage} onChange={() => setSelectedStage(stage)} />
                   <div className="text-xs text-center px-3 py-2.5 border border-ink-900/15 rounded-full text-ink-soft peer-checked:bg-ink-900 peer-checked:text-paper-50 peer-checked:border-ink-900 hover:border-ink-900/40 transition-all">
