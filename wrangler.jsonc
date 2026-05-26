@@ -1,15 +1,28 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "mwdzn",
-  "main": "src/worker.js",
-  "compatibility_date": "2026-05-26",
-  "compatibility_flags": ["nodejs_compat"],
-  "observability": {
-    "enabled": true
-  },
-  "assets": {
-    "directory": "./dist",
-    "binding": "ASSETS",
-    "not_found_handling": "single-page-application"
-  }
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "mwdzn",
+	"main": "src/worker.js",
+	"compatibility_date": "2026-05-26",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"observability": {
+		"enabled": true
+	},
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+		"not_found_handling": "single-page-application"
+	},
+	"routes": [
+		{
+			"pattern": "markward.dev",
+			"zone_name": "markward.dev",
+			"custom_domain": true,
+			"enabled": true,
+			"previews_enabled": false
+		}
+	],
+	"workers_dev": true,
+	"preview_urls": true
 }
