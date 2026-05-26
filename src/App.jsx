@@ -869,6 +869,7 @@ const BlueprintGenerator = () => {
   const [blueprint, setBlueprint] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const generateBlueprint = async (e) => {
     e.preventDefault();
@@ -965,106 +966,160 @@ const BlueprintGenerator = () => {
   };
 
   return (
-    <section className="py-24 lg:py-32 bg-paper-200/50 border-y border-ink-900/10">
-      <div className="max-w-[900px] mx-auto px-6 lg:px-10">
-        <Reveal as="div" className="mb-10 text-center">
-          <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet mb-4">Not ready to book?</div>
-          <h2 className="font-display font-medium text-3xl lg:text-5xl leading-[1.05] tracking-tighter2">
+    <section className="py-24 lg:py-32 bg-paper-200/40 border-y border-ink-900/10">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
+        {/* ---------- section header ---------- */}
+        <Reveal as="div" className="mb-12 lg:mb-16 max-w-3xl">
+          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent mb-4 inline-flex items-center gap-2">
+            <Sparkles size={12} /> Not ready to book? · Beta
+          </div>
+          <h2 className="font-display font-medium text-4xl lg:text-6xl leading-[1.02] tracking-tighter2">
             Scope your idea <em className="italic font-normal text-accent">instantly.</em>
           </h2>
-          <p className="mt-5 text-ink-soft max-w-xl mx-auto">
+          <p className="mt-6 text-lg text-ink-soft leading-relaxed max-w-2xl">
             Describe your project. An AI architect drafts a recommended stack, flags real risks,
             and estimates a timeline. No email gate.
           </p>
         </Reveal>
 
-        <Reveal as="div" className="bg-paper border border-ink-900/10 rounded-2xl overflow-hidden shadow-[0_1px_0_rgba(22,20,18,0.04),0_24px_48px_-24px_rgba(22,20,18,0.18)]">
-          <div className="px-6 py-4 border-b border-ink-900/10 flex items-center gap-3">
-            <Sparkles size={16} className="text-accent" />
-            <h3 className="font-medium text-sm tracking-tightish">AI architectural blueprint</h3>
-            <span className="ml-auto text-[10px] font-mono uppercase tracking-[0.18em] text-ink-quiet">Beta</span>
-          </div>
-
-          <div className="p-6 lg:p-10">
-            {!blueprint ? (
-              <form onSubmit={generateBlueprint} className="space-y-6">
+        {!blueprint ? (
+          /* ---------- form ---------- */
+          <Reveal as="div" className="border-t border-ink-900/15 pt-10 lg:pt-12">
+            <form onSubmit={generateBlueprint} className="space-y-8 max-w-3xl">
+              <div>
+                <label htmlFor="bp-idea" className="block text-[10px] font-mono uppercase tracking-[0.22em] text-ink-quiet mb-3">
+                  Project idea
+                </label>
                 <textarea
+                  id="bp-idea"
                   value={idea}
                   onChange={(e) => setIdea(e.target.value)}
-                  className="w-full bg-paper-50 border border-ink-900/10 rounded-lg p-4 text-ink-900 placeholder:text-ink-300 focus:outline-none focus:border-accent transition-colors resize-none h-32"
-                  placeholder="e.g., A real-time marketplace for vintage watch collectors with auction functionality..."
+                  className="w-full bg-transparent border-b border-ink-900/20 py-3 text-ink-900 placeholder:text-ink-300 focus:outline-none focus:border-accent transition-colors resize-none"
+                  rows={4}
+                  placeholder="e.g., A real-time marketplace for vintage watch collectors with auction functionality…"
                 />
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-ink-quiet">Powered by Gemini 2.5 Flash</span>
-                  <PillButton variant="accent" type="submit" onClick={generateBlueprint}>
-                    {loading ? <><Loader size={16} className="animate-spin" /> Analyzing…</> : <><Sparkles size={16} /> Generate blueprint</>}
-                  </PillButton>
-                </div>
-                {error && <p className="text-signal-warm text-sm">{error}</p>}
-              </form>
-            ) : (
-              <div className="space-y-8">
-                <div className="flex items-start justify-between gap-4 pb-6 border-b border-ink-900/10">
-                  <div>
-                    <h4 className="font-display text-xl font-medium tracking-tightish">Analysis complete</h4>
-                    <p className="text-sm text-ink-quiet">Based on what you described.</p>
-                  </div>
-                  <button onClick={() => setBlueprint(null)} className="text-sm text-ink-quiet hover:text-ink-900 underline underline-offset-4">
-                    New idea
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { Icon: Layout, label: 'Frontend', value: blueprint.stack.frontend },
-                    { Icon: Server, label: 'Backend', value: blueprint.stack.backend },
-                    { Icon: Database, label: 'Database', value: blueprint.stack.database },
-                    { Icon: Layers, label: 'Infra', value: blueprint.stack.infra },
-                  ].map(({ Icon, label, value }) => (
-                    <div key={label} className="p-4 border border-ink-900/10 rounded-lg bg-paper-50">
-                      <div className="flex items-center gap-2 text-accent mb-2">
-                        <Icon size={14} />
-                        <span className="text-[10px] font-mono uppercase tracking-[0.18em]">{label}</span>
-                      </div>
-                      <div className="font-mono text-sm text-ink-900">{value}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="p-5 rounded-lg border-l-2 border-signal-warm bg-paper-50">
-                    <div className="flex items-center gap-2 mb-2 text-signal-warm">
-                      <Clock size={16} />
-                      <h5 className="font-medium text-sm">Estimated timeline</h5>
-                    </div>
-                    <p className="text-sm text-ink-soft leading-relaxed">{blueprint.timeline}</p>
-                  </div>
-                  <div className="p-5 rounded-lg border-l-2 border-accent bg-paper-50">
-                    <div className="flex items-center gap-2 mb-2 text-accent">
-                      <FileText size={16} />
-                      <h5 className="font-medium text-sm">Architect's verdict</h5>
-                    </div>
-                    <p className="text-sm text-ink-soft leading-relaxed italic">"{blueprint.verdict}"</p>
-                  </div>
-                </div>
-
-                <div>
-                  <h5 className="text-[10px] font-mono uppercase tracking-[0.18em] text-ink-quiet mb-4 flex items-center gap-2">
-                    <ShieldAlert size={14} /> Technical challenges
-                  </h5>
-                  <ul className="space-y-3">
-                    {blueprint.challenges.map((challenge, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-ink-soft">
-                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-signal-warm flex-shrink-0" />
-                        {challenge}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
               </div>
-            )}
+
+              {error && (
+                <div role="alert" className="rounded-md border border-warm/40 bg-warm/5 px-4 py-3 text-sm text-warm">
+                  {error}
+                </div>
+              )}
+
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
+                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-quiet">
+                  Powered by Gemini 2.5 Flash
+                </span>
+                <PillButton variant="accent" type="submit" className={loading ? 'opacity-70 pointer-events-none' : ''}>
+                  {loading ? <><Loader size={16} className="animate-spin" /> Analyzing…</> : <>Generate blueprint <ArrowRight size={16} /></>}
+                </PillButton>
+              </div>
+            </form>
+          </Reveal>
+        ) : (
+          /* ---------- output ---------- */
+          <div className="border-t border-ink-900/15 pt-10 lg:pt-12 space-y-14 lg:space-y-20">
+            {/* result header */}
+            <Reveal as="div" className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
+              <div>
+                <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent mb-3">
+                  Blueprint · 01
+                </div>
+                <h3 className="font-display font-medium text-3xl lg:text-5xl leading-[1.02] tracking-tighter2">
+                  Here’s how I’d build it.
+                </h3>
+              </div>
+              <button
+                onClick={() => { setBlueprint(null); setIdea(''); setError(''); }}
+                className="group inline-flex items-center gap-2 text-sm font-medium text-ink-700 hover:text-accent underline decoration-ink-300 decoration-1 underline-offset-[6px] hover:decoration-accent transition-colors self-start sm:self-end"
+              >
+                Try another idea <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+              </button>
+            </Reveal>
+
+            {/* stack */}
+            <Reveal as="div">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-quiet mb-6">
+                Recommended stack
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4">
+                {[
+                  { Icon: Layout, label: 'Frontend', value: blueprint.stack.frontend },
+                  { Icon: Server, label: 'Backend', value: blueprint.stack.backend },
+                  { Icon: Database, label: 'Database', value: blueprint.stack.database },
+                  { Icon: Layers, label: 'Infra', value: blueprint.stack.infra },
+                ].map(({ Icon, label, value }, i) => (
+                  <div
+                    key={label}
+                    className={`py-5 px-5 lg:px-6 ${i > 0 ? 'border-l border-ink-900/15' : ''} ${i >= 2 ? 'md:border-l border-l border-ink-900/15' : ''}`}
+                  >
+                    <div className="flex items-center gap-2 text-accent mb-3">
+                      <Icon size={14} />
+                      <span className="text-[10px] font-mono uppercase tracking-[0.22em]">{label}</span>
+                    </div>
+                    <div className="font-display text-lg lg:text-xl font-medium leading-[1.15] tracking-tightish text-ink-900">
+                      {value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+
+            {/* timeline + verdict */}
+            <div className="grid md:grid-cols-2 gap-10 lg:gap-16">
+              <Reveal as="div" className="space-y-3">
+                <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent inline-flex items-center gap-2">
+                  <Clock size={12} /> Estimated timeline
+                </div>
+                <p className="font-display text-2xl lg:text-3xl font-medium leading-[1.15] tracking-tighter2 text-ink-900">
+                  {blueprint.timeline}
+                </p>
+              </Reveal>
+              <Reveal as="div" delay={80} className="space-y-3">
+                <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-warm inline-flex items-center gap-2">
+                  <FileText size={12} /> Architect’s verdict
+                </div>
+                <p className="font-display text-xl lg:text-2xl leading-[1.2] tracking-tighter2 text-ink-900 italic">
+                  “{blueprint.verdict}”
+                </p>
+              </Reveal>
+            </div>
+
+            {/* challenges */}
+            <Reveal as="div">
+              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-warm mb-6 inline-flex items-center gap-2">
+                <ShieldAlert size={12} /> Technical challenges
+              </div>
+              <ul className="divide-y divide-ink-900/10 border-y border-ink-900/15">
+                {blueprint.challenges.map((challenge, i) => (
+                  <li key={i} className="flex items-start gap-6 py-5">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-quiet shrink-0 pt-1">
+                      0{i + 1}
+                    </span>
+                    <span className="text-ink-soft leading-relaxed">{challenge}</span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+
+            {/* closing CTA */}
+            <Reveal as="div" className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 pt-2">
+              <div className="max-w-xl">
+                <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent mb-3">
+                  Want me to build this?
+                </div>
+                <p className="font-display text-xl lg:text-2xl leading-[1.2] tracking-tighter2 text-ink-900">
+                  The AI gave you a rough shape. <em className="italic font-normal text-ink-soft">I’ll give you a real proposal.</em>
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-4">
+                <PillButton variant="accent" onClick={() => navigate('/contact')}>
+                  Start a project <ArrowRight size={16} />
+                </PillButton>
+              </div>
+            </Reveal>
           </div>
-        </Reveal>
+        )}
       </div>
     </section>
   );
