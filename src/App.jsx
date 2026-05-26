@@ -1312,7 +1312,7 @@ export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSe
               Thanks for reaching out — I'll reply within one business day.
             </h3>
             <p className="text-ink-soft leading-relaxed">
-              No auto-responder. I read every message personally. Watch your inbox for a real reply from <span className="text-ink-900">mark@markward.dev</span>.
+              No auto-responder. I read every message personally. Watch your inbox for a real reply from <span className="text-ink-900">mark@markwarddesign.com</span>.
             </p>
             <button
               type="button"
