@@ -92,9 +92,12 @@ async function sendViaResend({ apiKey, from, to, replyTo, subject, html, text })
   return res.json();
 }
 
-export async function onRequestPost(context) {
-  const { request, env } = context;
-
+/**
+ * Core contact handler — exported for the Workers entry (src/worker.js)
+ * to invoke for POST /api/contact. The onRequestPost shim below preserves
+ * Pages Functions compatibility in case this is ever moved back.
+ */
+export async function handleContact(request, env) {
   // Origin check — only accept submissions from the deployed site or local dev.
   const origin = request.headers.get('origin') || '';
   const allowed = [
@@ -226,4 +229,5 @@ export async function onRequestPost(context) {
   }
 }
 
-// Pages Functions auto-returns 405 for other methods when only onRequestPost is exported.
+// Pages Functions compatibility shim — onRequestPost is the Pages convention.
+export const onRequestPost = (context) => handleContact(context.request, context.env);
