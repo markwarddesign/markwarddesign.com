@@ -226,10 +226,4 @@ export async function onRequestPost(context) {
   }
 }
 
-// Reject other methods explicitly
-export async function onRequest(context) {
-  if (context.request.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405, headers: { Allow: 'POST' } });
-  }
-  return onRequestPost(context);
-}
+// Pages Functions auto-returns 405 for other methods when only onRequestPost is exported.
