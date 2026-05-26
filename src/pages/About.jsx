@@ -44,8 +44,8 @@ const DONT = [
 
 const CREDENTIALS = [
   { value: '15+', label: 'Years shipping production' },
+  { value: '150+', label: 'Websites built' },
   { value: '3', label: 'SaaS products co-founded' },
-  { value: '7', label: 'Engineers led at peak' },
   { value: '2011', label: 'Remote since' },
 ];
 

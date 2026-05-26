@@ -5,6 +5,27 @@
 /* Hallmark · macrostructure: Triptych · tone: bright-confident · anchor hue: cobalt */
 
 :root {
+  /* Tailwind-bridged tokens (used by paper.* / ink.* / etc. via rgb(var(...))) */
+  --paper-rgb: 255 255 255;
+  --paper-50-rgb: 250 250 250;
+  --paper-100-rgb: 244 244 245;
+  --paper-200-rgb: 228 228 231;
+  --paper-300-rgb: 212 212 216;
+
+  --ink-rgb: 10 10 11;
+  --ink-900-rgb: 10 10 11;
+  --ink-700-rgb: 39 39 42;
+  --ink-500-rgb: 82 82 91;
+  --ink-400-rgb: 113 113 122;
+  --ink-300-rgb: 161 161 170;
+
+  --accent-50-rgb: 238 242 255;
+  --warm-50-rgb: 255 247 237;
+  --warm-100-rgb: 255 237 213;
+  --sage-50-rgb: 241 245 249;
+  --sage-100-rgb: 226 232 240;
+
+  /* Legacy named tokens — still used by body { background } / color */
   --color-paper: #ffffff;
   --color-paper-2: #f4f4f5;
   --color-ink: #0a0a0b;
@@ -27,6 +48,47 @@
   color-scheme: light;
 }
 
+/* Dark mode — inverse palette. paper/ink scales swap so the entire
+   var-driven Tailwind palette flips with one class on the root. */
+html.dark {
+  --paper-rgb: 14 14 16;       /* page bg — deep but not pure black */
+  --paper-50-rgb: 24 24 27;    /* zinc-900 — slightly lifted surface */
+  --paper-100-rgb: 39 39 42;   /* zinc-800 — cards / muted bg */
+  --paper-200-rgb: 63 63 70;   /* zinc-700 — borders / dividers */
+  --paper-300-rgb: 82 82 91;   /* zinc-600 */
+
+  --ink-rgb: 250 250 250;      /* default text — near-white */
+  --ink-900-rgb: 250 250 250;  /* text-ink-900 → light. bg-ink-900 also lifts (becomes feature surface — see below). */
+  --ink-700-rgb: 228 228 231;
+  --ink-500-rgb: 161 161 170;
+  --ink-400-rgb: 144 144 153;  /* slightly brighter quiet text for legibility */
+  --ink-300-rgb: 113 113 122;
+
+  --accent-50-rgb: 79 70 229;  /* indigo-600 base, with /15 opacity inline = subtle accent backdrop */
+  --warm-50-rgb: 67 38 9;      /* deep warm — feature/path tint */
+  --warm-100-rgb: 91 51 11;
+  --sage-50-rgb: 30 41 59;     /* slate-800 — sage path tint */
+  --sage-100-rgb: 51 65 85;    /* slate-700 */
+
+  --color-paper: #0e0e10;
+  --color-ink: #fafafa;
+  --color-ink-soft: #d4d4d8;
+  --color-ink-quiet: #a1a1aa;
+  --color-rule: rgba(250, 250, 250, 0.12);
+  --color-rule-strong: rgba(250, 250, 250, 0.24);
+
+  color-scheme: dark;
+}
+
+/* Disable color transitions during the theme swap to prevent every
+   element from animating its background/color when toggling. */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: none !important;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
@@ -41,6 +103,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  transition: background-color 240ms var(--ease-out), color 240ms var(--ease-out);
 }
 
 ::selection { background: var(--color-ink); color: var(--color-paper); }

@@ -295,63 +295,63 @@ export const SITE_STUDIES = [
   {
     slug: 'sculpting-time',
     type: 'websites',
-    kicker: 'Creative studio',
+    kicker: 'Artisan · Kinetic clocks',
     title: 'Sculpting Time',
-    subtitle: 'An editorial home for a creative studio that needed its work to feel cinematic.',
+    subtitle: 'A showcase for one-of-a-kind kinetic clocks built by a master finish carpenter.',
     role: 'Design & build',
     client: 'Sculpting Time',
     href: 'https://sculpting-time.com/',
     accentClass: 'text-warm',
     tint: 'warm',
-    hireFor: 'Studio brand sites · Editorial portfolios · CMS-light maintenance',
+    hireFor: 'Artisan & maker sites · Craft brand showcases · Provenance-led storytelling',
     pitch:
-      'A creative studio whose work was getting better than their website. Built them an editorial home with cinematic pacing — and a content model their team can actually maintain.',
+      'Forty-plus years of finish carpentry behind every clock — and a website that finally honors the craft. A gallery-first site where the work, the wood, and the maker’s hand are the loudest things on the page.',
     metaDescription:
-      'Sculpting Time — an editorial creative studio website with cinematic typography and a content model the team owns.',
+      'Sculpting Time — a portfolio site for a master finish carpenter turned kinetic-clock maker. Gallery-first design, deliberate pacing, and a maker’s story.',
     stats: [
-      { label: 'Focus', value: 'Studio brand' },
-      { label: 'Built for', value: 'Story-first work' },
+      { label: 'Focus', value: 'Kinetic clocks' },
+      { label: 'Built for', value: 'Collectors' },
       { label: 'Type', value: 'Custom WordPress' },
     ],
     situation: {
       heading: 'The situation',
       body: [
-        'A creative studio whose portfolio had outpaced their website. They needed something that matched the work — and they needed to be able to update it without calling the developer every time.',
+        'A craftsman with four decades of finish carpentry experience, now building one-of-a-kind kinetic clocks. The work was extraordinary; the existing online presence was treating each piece like a product listing instead of a sculpture.',
       ],
     },
     approach: {
       heading: 'What I built',
       body: [
-        'A custom theme with editorial typography, deliberate pacing, and a content model that maps cleanly to how the team thinks about their projects. Updating a case study is a single page in the CMS, not a six-step ritual.',
+        'A gallery-first site with editorial typography, deliberate pacing, and room for each piece to breathe. The maker’s story — the carpentry roots, the moving parts, the patience of the craft — is woven into the structure, not buried in an "About" tab.',
       ],
     },
     outcomes: {
       heading: 'What it does',
       body: [
-        'A site that finally matches the studio\'s work — and one the team can actually keep current.',
+        'A site that presents each clock as a sculpture, not a SKU — and gives serious collectors a quiet, dignified path to make contact.',
       ],
     },
     pages: [
       {
-        name: 'Home',
-        screenshotLabel: 'Sculpting Time · Home',
-        copy: 'Editorial pacing, cinematic type, work-first.',
+        name: 'Gallery',
+        screenshotLabel: 'Sculpting Time · Gallery',
+        copy: 'Each piece presented like a sculpture, not a product card.',
       },
       {
-        name: 'Case studies',
-        screenshotLabel: 'Sculpting Time · Case studies',
-        copy: 'A content model the team owns end-to-end.',
-      },
-      {
-        name: 'About',
+        name: 'Maker’s story',
         screenshotLabel: 'Sculpting Time · About',
-        copy: 'Who the people are, in their own voice.',
+        copy: 'Forty years of finish carpentry, woven into the brand — not buried in About.',
+      },
+      {
+        name: 'Inquiry',
+        screenshotLabel: 'Sculpting Time · Inquiry',
+        copy: 'A quiet path for serious collectors to start a conversation.',
       },
     ],
     stack: ['WordPress', 'Custom theme', 'PHP'],
     cta: {
-      heading: 'Studio? Agency? Creative business?',
-      body: 'If your work is better than your website, that\'s the gap I close.',
+      heading: 'Maker, artisan, craftsperson?',
+      body: 'If your work deserves a website that treats it as work — not inventory — this is the kind of build that does.',
     },
   },
   {
@@ -417,128 +417,66 @@ export const SITE_STUDIES = [
     },
   },
   {
-    slug: 'zulutions-global',
-    type: 'websites',
-    kicker: 'B2B services',
-    title: 'Zulutions Global',
-    subtitle: 'A multi-service B2B presence rebuilt around clarity.',
-    role: 'Design & build',
-    client: 'Zulutions Global',
-    href: 'https://zulutionsglobal.com/',
-    accentClass: 'text-sage',
-    tint: 'sage',
-    hireFor: 'B2B services sites · Multi-offering navigation · Lead capture',
-    pitch:
-      'A services company with too many offerings and no clear story. Rebuilt the site around what the buyer actually wants to know — what they do, who it\'s for, how to start.',
-    metaDescription:
-      'Zulutions Global — a multi-service B2B presence rebuilt for clarity, with a clean services navigation and a fast lead-capture flow.',
-    stats: [
-      { label: 'Focus', value: 'Services clarity' },
-      { label: 'Built for', value: 'Lead capture' },
-      { label: 'Type', value: 'Custom WordPress' },
-    ],
-    situation: {
-      heading: 'The situation',
-      body: [
-        'A services company whose homepage couldn\'t answer "what do you do?" in under thirty seconds. Five service lines, all important, all blending together.',
-      ],
-    },
-    approach: {
-      heading: 'What I built',
-      body: [
-        'A site organized around the buyer\'s question, not the org chart. Each service line gets a clear pitch, a clear "who it\'s for," and a single next step. Internal navigation that doesn\'t make the visitor solve a puzzle.',
-      ],
-    },
-    outcomes: {
-      heading: 'What it does',
-      body: [
-        'A site a salesperson can finally point to — and a homepage that answers the question in under thirty seconds.',
-      ],
-    },
-    pages: [
-      {
-        name: 'Home',
-        screenshotLabel: 'Zulutions · Home',
-        copy: 'The question, answered up front.',
-      },
-      {
-        name: 'Services',
-        screenshotLabel: 'Zulutions · Services',
-        copy: 'Five service lines, five clear stories.',
-      },
-      {
-        name: 'Contact',
-        screenshotLabel: 'Zulutions · Contact',
-        copy: 'One step from "interested" to "talking."',
-      },
-    ],
-    stack: ['WordPress', 'Custom theme'],
-    cta: {
-      heading: 'Services company with a messy site?',
-      body: 'If your homepage can\'t answer "what do you do?" in thirty seconds, that\'s exactly what this work fixes.',
-    },
-  },
-  {
     slug: 'conley-auto',
     type: 'websites',
-    kicker: 'Dealership marketing',
+    kicker: 'Industry consulting',
     title: 'Conley Auto',
-    subtitle: 'A modern dealership site built mobile-first for the market that actually shops on phones.',
+    subtitle: 'Forty years in the auto industry, finally on a website that earns the credibility.',
     role: 'Design & build',
     client: 'Conley Auto',
     href: 'https://markwarddesign.github.io/conleyauto/',
     status: 'Pre-launch · conleyauto.com',
     accentClass: 'text-warm',
     tint: 'warm',
-    hireFor: 'Dealership sites · Mobile-first builds · Local SEO foundations',
+    hireFor: 'Solo-expert sites · Consulting practices · Authority positioning',
     pitch:
-      'Most dealership shoppers arrive from a phone, on flaky cell signal, with limited patience. Built a site that works for them — fast, clear, and local-SEO-ready from day one.',
+      'A site for a forty-year auto-industry veteran moving into consulting. The job: convey "this person has seen it all" in the first thirty seconds — and make booking a conversation feel like the only logical next step.',
     metaDescription:
-      'Conley Auto — a mobile-first dealership marketing site built fast for flaky cell signal, with a local-SEO foundation.',
+      'Conley Auto — a solo-expert consulting site that turns forty years of auto-industry experience into instantly legible credibility, with a clear path to a first call.',
     stats: [
-      { label: 'Focus', value: 'Local dealership' },
-      { label: 'Built for', value: 'Mobile-first' },
+      { label: 'Focus', value: 'Auto-industry consulting' },
+      { label: 'Built for', value: 'Booking conversations' },
       { label: 'Type', value: 'Static site' },
     ],
     situation: {
       heading: 'The situation',
       body: [
-        'A dealership whose website was an afterthought — slow on mobile, invisible in local search, and shaped like a desktop catalog in a market that shops on phones.',
+        'A veteran with forty years of auto-industry experience, stepping out on his own as a consultant. Decades of credibility, but no website to carry it — and no clear way for prospective clients to find the work or start a conversation.',
       ],
     },
     approach: {
       heading: 'What I built',
       body: [
-        'A static, mobile-first site that loads on bad signal, structures every page around the local SEO query that brought the visitor, and gives the dealership a content model they can actually update from a phone.',
+        'A focused, authority-led site that puts the forty-year track record front-and-center, breaks the consulting offer into language a dealer principal or operator actually uses, and gives every page a single, obvious next step: get on a call.',
       ],
     },
     outcomes: {
       heading: 'What it does',
       body: [
-        'A site that meets shoppers where they actually are — on a phone, in a parking lot, looking for the next car.',
+        'A site that does the credibility-building work before the first conversation — so the calls that do happen are with operators who already know who they’re hiring.',
       ],
     },
     pages: [
       {
-        name: 'Home',
-        screenshotLabel: 'Conley Auto · Home',
-        copy: 'Inventory-ready, fast on cell, designed for thumb reach.',
+        name: 'Hero & positioning',
+        screenshotLabel: 'Conley Auto · Hero',
+        copy: 'Forty years of experience, said plainly. No buzzwords, no stock imagery.',
       },
       {
-        name: 'Inventory',
-        screenshotLabel: 'Conley Auto · Inventory',
-        copy: 'A vehicle list that respects the visitor\'s data plan.',
+        name: 'Consulting offer',
+        screenshotLabel: 'Conley Auto · Services',
+        copy: 'What the engagement looks like, in language operators actually use.',
       },
       {
-        name: 'Contact',
+        name: 'Book a call',
         screenshotLabel: 'Conley Auto · Contact',
-        copy: 'Tap to call. Tap for directions. Done.',
+        copy: 'One obvious next step on every page. No forms competing for attention.',
       },
     ],
     stack: ['Static site', 'Tailwind'],
     cta: {
-      heading: 'Dealership? Local business?',
-      body: 'If most of your shoppers arrive from a phone and your site doesn\'t respect that, this is the fix.',
+      heading: 'Solo expert? Veteran going independent?',
+      body: 'If you’ve got decades of experience and need a website that says so without bragging, this is the kind of build that does.',
     },
   },
   {

@@ -23,7 +23,44 @@ import {
   Github,
   Linkedin,
   Mail,
+  Sun,
+  Moon,
 } from 'lucide-react';
+
+/* ---------- theme (light / dark) ---------- */
+
+const useTheme = () => {
+  const [theme, setTheme] = useState(() => {
+    if (typeof document === 'undefined') return 'light';
+    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    // Briefly suppress transitions so toggling doesn't animate every element.
+    root.classList.add('theme-transitioning');
+    if (theme === 'dark') root.classList.add('dark');
+    else root.classList.remove('dark');
+    try { localStorage.setItem('theme', theme); } catch (e) {}
+    const t = setTimeout(() => root.classList.remove('theme-transitioning'), 30);
+    return () => clearTimeout(t);
+  }, [theme]);
+
+  const toggle = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
+  return { theme, toggle };
+};
+
+const ThemeToggle = ({ theme, onToggle, className = '' }) => (
+  <button
+    type="button"
+    onClick={onToggle}
+    aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+    title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+    className={`relative z-10 inline-flex items-center justify-center h-9 w-9 rounded-full border border-ink-900/15 text-ink-700 hover:text-ink-900 hover:border-ink-900/30 transition-colors ${className}`}
+  >
+    {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+  </button>
+);
 
 /* ---------- smooth scroll (Lenis) ---------- */
 
@@ -174,7 +211,7 @@ const NAV_ITEMS = [
   { id: 'contact', label: 'Contact', type: 'route', path: '/contact' },
 ];
 
-const Nav = ({ onCta }) => {
+const Nav = ({ onCta, theme, onToggleTheme }) => {
   const lenis = useLenis();
   const location = useLocation();
   const navigate = useNavigate();
@@ -271,7 +308,7 @@ const Nav = ({ onCta }) => {
           {NAV_ITEMS.map((item) => {
             const isActive = active === item.id;
             const className = `relative z-10 text-sm px-3 py-1.5 transition-colors duration-200 ${
-              isActive ? 'text-accent-700' : 'text-ink-700 hover:text-ink-900'
+              isActive ? 'text-accent-700 dark:text-paper-50' : 'text-ink-700 hover:text-ink-900'
             }`;
             if (item.type === 'route') {
               return (
@@ -306,9 +343,12 @@ const Nav = ({ onCta }) => {
           })}
         </div>
 
-        <PillButton variant="solid" onClick={onCta} className="!py-2 !px-4 !text-sm ml-3">
-          Start a project
-        </PillButton>
+        <div className="flex items-center gap-2 ml-3">
+          {onToggleTheme && <ThemeToggle theme={theme} onToggle={onToggleTheme} />}
+          <PillButton variant="solid" onClick={onCta} className="!py-2 !px-4 !text-sm">
+            Start a project
+          </PillButton>
+        </div>
       </div>
     </header>
   );
@@ -998,7 +1038,134 @@ const BlueprintGenerator = () => {
 
 /* ---------- contact ---------- */
 
-export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSelectedBudget }) => (
+/* ---------- Turnstile hook ---------- */
+
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
+
+const useTurnstile = (containerRef) => {
+  const [token, setToken] = useState('');
+  const widgetIdRef = useRef(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || !TURNSTILE_SITE_KEY) return;
+
+    let cancelled = false;
+    const render = () => {
+      if (cancelled || !window.turnstile || !el) return;
+      // Avoid double-render in dev StrictMode
+      if (widgetIdRef.current != null) return;
+      widgetIdRef.current = window.turnstile.render(el, {
+        sitekey: TURNSTILE_SITE_KEY,
+        theme: 'auto',
+        appearance: 'always', // always show small widget so users see the protection
+        callback: (t) => setToken(t),
+        'expired-callback': () => setToken(''),
+        'error-callback': () => setToken(''),
+      });
+    };
+
+    if (window.turnstile) render();
+    else {
+      const t = setInterval(() => {
+        if (window.turnstile) { clearInterval(t); render(); }
+      }, 100);
+      // Safety timeout
+      setTimeout(() => clearInterval(t), 8000);
+    }
+
+    return () => {
+      cancelled = true;
+      if (widgetIdRef.current != null && window.turnstile) {
+        try { window.turnstile.remove(widgetIdRef.current); } catch (e) {}
+      }
+      widgetIdRef.current = null;
+    };
+  }, [containerRef]);
+
+  const reset = () => {
+    if (widgetIdRef.current != null && window.turnstile) {
+      try { window.turnstile.reset(widgetIdRef.current); } catch (e) {}
+    }
+    setToken('');
+  };
+
+  return { token, reset, configured: !!TURNSTILE_SITE_KEY };
+};
+
+/* ---------- contact form ---------- */
+
+export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSelectedBudget }) => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+  const [errorMessage, setErrorMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+  const loadedAtRef = useRef(Date.now());
+  const turnstileRef = useRef(null);
+  const { token: turnstileToken, reset: resetTurnstile, configured: turnstileOn } = useTurnstile(turnstileRef);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (status === 'sending') return;
+    setFieldErrors({});
+    setErrorMessage('');
+
+    // Quick client-side guards
+    const errs = {};
+    if (!name || name.trim().length < 2) errs.name = 'Please add your name.';
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = 'Please add a valid email.';
+    if (!message || message.trim().length < 10) errs.message = 'A few sentences helps me write back faster.';
+    if (turnstileOn && !turnstileToken) errs.turnstile = 'Please complete the verification.';
+    if (Object.keys(errs).length) {
+      setFieldErrors(errs);
+      return;
+    }
+
+    const form = e.currentTarget;
+    const honeypot = form.elements.company_url?.value || '';
+
+    setStatus('sending');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          stage: selectedStage,
+          budget: selectedBudget,
+          message: message.trim(),
+          company_url: honeypot,
+          loaded_at: loadedAtRef.current,
+          turnstile_token: turnstileToken,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        if (data.errors) setFieldErrors(data.errors);
+        setErrorMessage(data.error || 'Something went wrong. Try again in a moment.');
+        setStatus('error');
+        resetTurnstile();
+        return;
+      }
+      setStatus('sent');
+      setName(''); setEmail(''); setMessage('');
+      setSelectedStage(''); setSelectedBudget('');
+      resetTurnstile();
+    } catch (err) {
+      setErrorMessage('Network error. Try again in a moment.');
+      setStatus('error');
+      resetTurnstile();
+    }
+  };
+
+  const fieldBase = 'w-full bg-transparent border-b py-2.5 text-ink-900 placeholder:text-ink-300 focus:outline-none transition-colors';
+  const fieldOk = 'border-ink-900/20 focus:border-accent';
+  const fieldErr = 'border-warm focus:border-warm';
+
+  return (
   <section id="contact" className="py-24 lg:py-32">
     <div className="max-w-[1100px] mx-auto px-6 lg:px-10 grid lg:grid-cols-12 gap-12">
       <Reveal as="div" className="lg:col-span-5">
@@ -1015,15 +1182,64 @@ export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSe
       </Reveal>
 
       <Reveal as="div" delay={100} className="lg:col-span-7">
-        <form className="space-y-8">
+        {status === 'sent' ? (
+          <div className="border border-ink-900/15 rounded-md p-8 bg-paper-100/60">
+            <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent mb-4">Message received</div>
+            <h3 className="font-display font-medium text-2xl lg:text-3xl leading-[1.15] tracking-tighter2 mb-4">
+              Thanks for reaching out — I'll reply within one business day.
+            </h3>
+            <p className="text-ink-soft leading-relaxed">
+              No auto-responder. I read every message personally. Watch your inbox for a real reply from <span className="text-ink-900">mark@markward.dev</span>.
+            </p>
+            <button
+              type="button"
+              onClick={() => setStatus('idle')}
+              className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-accent underline decoration-accent/30 underline-offset-[6px] hover:decoration-accent transition-colors"
+            >
+              Send another <ArrowRight size={14} />
+            </button>
+          </div>
+        ) : (
+        <form onSubmit={handleSubmit} className="space-y-8" noValidate>
+          {/* Honeypot — visible to bots, invisible to humans */}
+          <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
+            <label>
+              Company URL (leave blank)
+              <input
+                type="text"
+                name="company_url"
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </label>
+          </div>
+
           <div className="grid sm:grid-cols-2 gap-6">
             <div>
-              <label className="block text-[10px] font-mono uppercase tracking-[0.2em] text-ink-quiet mb-2">Name</label>
-              <input type="text" className="w-full bg-transparent border-b border-ink-900/20 py-2.5 text-ink-900 placeholder:text-ink-300 focus:outline-none focus:border-accent transition-colors" placeholder="Your name" />
+              <label htmlFor="cf-name" className="block text-[10px] font-mono uppercase tracking-[0.2em] text-ink-quiet mb-2">Name</label>
+              <input
+                id="cf-name"
+                type="text"
+                autoComplete="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={`${fieldBase} ${fieldErrors.name ? fieldErr : fieldOk}`}
+                placeholder="Your name"
+              />
+              {fieldErrors.name && <p className="mt-1 text-xs text-warm">{fieldErrors.name}</p>}
             </div>
             <div>
-              <label className="block text-[10px] font-mono uppercase tracking-[0.2em] text-ink-quiet mb-2">Email</label>
-              <input type="email" className="w-full bg-transparent border-b border-ink-900/20 py-2.5 text-ink-900 placeholder:text-ink-300 focus:outline-none focus:border-accent transition-colors" placeholder="you@company.com" />
+              <label htmlFor="cf-email" className="block text-[10px] font-mono uppercase tracking-[0.2em] text-ink-quiet mb-2">Email</label>
+              <input
+                id="cf-email"
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`${fieldBase} ${fieldErrors.email ? fieldErr : fieldOk}`}
+                placeholder="you@company.com"
+              />
+              {fieldErrors.email && <p className="mt-1 text-xs text-warm">{fieldErrors.email}</p>}
             </div>
           </div>
 
@@ -1056,21 +1272,48 @@ export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSe
           </div>
 
           <div>
-            <label className="block text-[10px] font-mono uppercase tracking-[0.2em] text-ink-quiet mb-2">What are you building?</label>
-            <textarea rows="4" className="w-full bg-transparent border-b border-ink-900/20 py-2.5 text-ink-900 placeholder:text-ink-300 focus:outline-none focus:border-accent transition-colors resize-none" placeholder="The problem you're solving, who it's for, and where you're stuck..."></textarea>
+            <label htmlFor="cf-message" className="block text-[10px] font-mono uppercase tracking-[0.2em] text-ink-quiet mb-2">What are you building?</label>
+            <textarea
+              id="cf-message"
+              rows="4"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className={`${fieldBase} ${fieldErrors.message ? fieldErr : fieldOk} resize-none`}
+              placeholder="The problem you're solving, who it's for, and where you're stuck..."
+            />
+            {fieldErrors.message && <p className="mt-1 text-xs text-warm">{fieldErrors.message}</p>}
           </div>
 
+          {/* Turnstile widget */}
+          {turnstileOn && (
+            <div>
+              <div ref={turnstileRef} className="cf-turnstile inline-block" />
+              {fieldErrors.turnstile && <p className="mt-1 text-xs text-warm">{fieldErrors.turnstile}</p>}
+            </div>
+          )}
+
+          {status === 'error' && errorMessage && (
+            <div role="alert" className="rounded-md border border-warm/40 bg-warm/5 px-4 py-3 text-sm text-warm">
+              {errorMessage}
+            </div>
+          )}
+
           <div className="pt-2">
-            <PillButton variant="accent" type="submit">
-              Send application <ArrowRight size={16} />
+            <PillButton variant="accent" type="submit" className={status === 'sending' ? 'opacity-70 pointer-events-none' : ''}>
+              {status === 'sending' ? 'Sending…' : 'Send application'} <ArrowRight size={16} />
             </PillButton>
-            <p className="mt-4 text-xs text-ink-quiet">I read every message personally. One business day to reply.</p>
+            <p className="mt-4 text-xs text-ink-quiet">
+              I read every message personally. One business day to reply.
+              {turnstileOn ? ' Spam protection by Cloudflare Turnstile.' : ''}
+            </p>
           </div>
         </form>
+        )}
       </Reveal>
     </div>
   </section>
-);
+  );
+};
 
 /* ---------- footer (Ft5 statement) ---------- */
 
@@ -1084,7 +1327,7 @@ const Footer = () => (
       <div className="mt-16 pt-8 border-t border-paper-50/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-sm text-paper-200/70">
         <div>© {new Date().getFullYear()} Mark Ward. All rights reserved.</div>
         <div className="flex items-center gap-6 flex-wrap">
-          <a href="https://portfolio.markwarddesign.com/" target="_blank" rel="noreferrer" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2">Writing <ArrowUpRight size={14} /></a>
+          <a href="https://portfolio.markward.dev/" target="_blank" rel="noreferrer" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2">Writing <ArrowUpRight size={14} /></a>
           <a href="#" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2"><Github size={16} /> GitHub</a>
           <a href="#" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2"><Linkedin size={16} /> LinkedIn</a>
           <Link to="/contact" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2"><Mail size={16} /> Contact</Link>
@@ -1204,6 +1447,7 @@ function AppShell() {
   const lenis = useLenis();
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, toggle: toggleTheme } = useTheme();
   const goToContact = () => {
     if (location.pathname === '/') scrollToId(lenis, 'contact');
     else navigate('/#contact');
@@ -1219,7 +1463,7 @@ function AppShell() {
 
   return (
     <div className="bg-paper text-ink-900 min-h-screen">
-      <Nav onCta={goToContact} />
+      <Nav onCta={goToContact} theme={theme} onToggleTheme={toggleTheme} />
       <main>
         <div key={location.pathname} className="page-fade">
           <Routes location={location}>

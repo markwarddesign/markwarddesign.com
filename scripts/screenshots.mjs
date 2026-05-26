@@ -26,7 +26,6 @@ const TARGETS = [
   { slug: 'dustin-edwards-fine-art', url: 'https://dustinedwardsfineart.com/' },
   { slug: 'sculpting-time', url: 'https://sculpting-time.com/' },
   { slug: 'dealer-transparency', url: 'https://dealertransparency.com/' },
-  { slug: 'zulutions-global', url: 'https://zulutionsglobal.com/' },
   { slug: 'conley-auto', url: 'https://markwarddesign.github.io/conleyauto/' },
   { slug: 'tbone-construction', url: 'https://markw1124.sg-host.com/' },
   { slug: 'miles', url: 'https://miles.dealertransparency.com/', wait: 'domcontentloaded' },

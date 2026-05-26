@@ -110,7 +110,7 @@ export default function Work() {
                 Apps — co-founded & shipped
               </div>
               <h2 className="font-display font-medium text-3xl lg:text-5xl leading-[1.02] tracking-tighter2">
-                Three SaaS products.
+                SaaS, shipped to real customers.
               </h2>
             </div>
             <Link
@@ -145,7 +145,7 @@ export default function Work() {
                 Websites — selected
               </div>
               <h2 className="font-display font-medium text-3xl lg:text-5xl leading-[1.02] tracking-tighter2">
-                Six client websites.
+                Sites for working businesses.
               </h2>
             </div>
             <Link
