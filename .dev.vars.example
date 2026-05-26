@@ -1,0 +1,19 @@
+# Copy this file to `.dev.vars` (gitignored) for local Wrangler dev.
+# These are server-side secrets only — never expose them to the client.
+#
+# Run with:  npm run dev:full
+#
+
+# Resend — to actually send email locally, get a real key from resend.com
+# and verify a domain. For "I just want the function path to work" testing,
+# leave it unset and the function will return a clean "Email not configured" error.
+RESEND_API_KEY=re_REPLACE_ME
+
+# Cloudflare Turnstile — use Cloudflare's documented TEST keys for local dev:
+#   site key (always passes):   1x00000000000000000000AA
+#   secret key (always passes): 1x0000000000000000000000000000000AA
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+
+# Optional overrides
+# CONTACT_TO=mark@markward.dev
+# CONTACT_FROM=Mark Ward · markward.dev <noreply@markward.dev>

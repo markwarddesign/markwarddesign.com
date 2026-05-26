@@ -1231,11 +1231,43 @@ export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSe
           turnstile_token: turnstileToken,
         }),
       });
-      const data = await res.json().catch(() => ({}));
+
+      // Parse — capture JSON when possible, raw text otherwise (helps diagnose
+      // when the request didn't hit the Pages Function at all, e.g. Vite dev).
+      const contentType = res.headers.get('content-type') || '';
+      let data = {};
+      let rawText = '';
+      if (contentType.includes('application/json')) {
+        try { data = await res.json(); } catch (_) { /* swallow */ }
+      } else {
+        rawText = await res.text().catch(() => '');
+      }
+
       if (!res.ok || !data.ok) {
         if (data.errors) setFieldErrors(data.errors);
-        setErrorMessage(data.error || 'Something went wrong. Try again in a moment.');
+
+        // Build the most useful error message we can.
+        let msg = data.error;
+        if (!msg && rawText && rawText.length < 200) msg = `${res.status}: ${rawText}`;
+        if (!msg) {
+          // Common failure: hit Vite dev server with no Function route.
+          if (res.status === 405 || res.status === 404) {
+            msg = `Endpoint not reachable (status ${res.status}). ` +
+              'If you\'re testing locally, `npm run dev` only runs Vite — Pages Functions need `npx wrangler pages dev` instead.';
+          } else {
+            msg = `Something went wrong (status ${res.status}).`;
+          }
+        }
+        // Surface Turnstile-specific reason
+        if (data.reason === 'turnstile-not-configured') {
+          msg = 'Spam protection is not configured on the server (TURNSTILE_SECRET_KEY missing).';
+        }
+
+        setErrorMessage(msg);
         setStatus('error');
+        // Log full response for deeper diagnosis
+        // eslint-disable-next-line no-console
+        console.error('[contact] submit failed', { status: res.status, data, rawText });
         resetTurnstile();
         return;
       }
@@ -1244,7 +1276,9 @@ export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSe
       setSelectedStage(''); setSelectedBudget('');
       resetTurnstile();
     } catch (err) {
-      setErrorMessage('Network error. Try again in a moment.');
+      // eslint-disable-next-line no-console
+      console.error('[contact] network error', err);
+      setErrorMessage(`Network error: ${err?.message || 'request failed'}`);
       setStatus('error');
       resetTurnstile();
     }
