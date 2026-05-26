@@ -45,6 +45,7 @@ export default {
           DEFAULT: '#475569',
           500: '#475569',
           50: '#f1f5f9',
+          100: '#e2e8f0',
         },
         signal: {
           warm: '#f97316',

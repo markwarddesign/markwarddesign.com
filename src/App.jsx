@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, createContext, useContext } from 'react';
+import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import Lenis from 'lenis';
+import AppsPage from './pages/Apps.jsx';
+import WebsitesPage from './pages/Websites.jsx';
+import CaseStudy from './pages/CaseStudy.jsx';
+import ServicesPage from './pages/Services.jsx';
+import ContactPage from './pages/Contact.jsx';
+import WorkPage from './pages/Work.jsx';
+import AboutPage from './pages/About.jsx';
 import {
   ArrowUpRight,
   ArrowRight,
@@ -19,9 +27,9 @@ import {
 
 /* ---------- smooth scroll (Lenis) ---------- */
 
-const LenisContext = createContext(null);
+export const LenisContext = createContext(null);
 
-const useLenis = () => useContext(LenisContext);
+export const useLenis = () => useContext(LenisContext);
 
 const useLenisInit = () => {
   const [lenis, setLenis] = useState(null);
@@ -116,7 +124,7 @@ const useReveal = () => {
   return ref;
 };
 
-const Reveal = ({ children, as: Tag = 'div', className = '', delay = 0 }) => {
+export const Reveal = ({ children, as: Tag = 'div', className = '', delay = 0 }) => {
   const ref = useReveal();
   return (
     <Tag
@@ -129,7 +137,7 @@ const Reveal = ({ children, as: Tag = 'div', className = '', delay = 0 }) => {
   );
 };
 
-const PrimaryLink = ({ href, onClick, children }) => (
+export const PrimaryLink = ({ href, onClick, children }) => (
   <a
     href={href}
     onClick={onClick}
@@ -140,7 +148,7 @@ const PrimaryLink = ({ href, onClick, children }) => (
   </a>
 );
 
-const PillButton = ({ children, variant = 'solid', onClick, type = 'button', className = '' }) => {
+export const PillButton = ({ children, variant = 'solid', onClick, type = 'button', className = '' }) => {
   const base = 'inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full text-sm font-medium tracking-tightish transition-all duration-200 active:scale-[0.98]';
   const styles =
     variant === 'solid'
@@ -160,15 +168,22 @@ const PillButton = ({ children, variant = 'solid', onClick, type = 'button', cla
 // In page-scroll order — this is what the eye reads top-to-bottom, so the nav
 // should read left-to-right in the same order to avoid backward indicator slides.
 const NAV_ITEMS = [
-  { id: 'engage', label: 'Engage' },
-  { id: 'work', label: 'Work' },
-  { id: 'contact', label: 'Contact' },
+  { id: 'services', label: 'Services', type: 'route', path: '/services' },
+  { id: 'work', label: 'Work', type: 'route', path: '/work' },
+  { id: 'about', label: 'About', type: 'route', path: '/about' },
+  { id: 'contact', label: 'Contact', type: 'route', path: '/contact' },
 ];
 
 const Nav = ({ onCta }) => {
   const lenis = useLenis();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isHome = location.pathname === '/';
   const [scrolled, setScrolled] = useState(false);
-  const active = useActiveSection(NAV_ITEMS.map((i) => i.id));
+  const anchorIds = NAV_ITEMS.filter((i) => i.type === 'anchor').map((i) => i.id);
+  const activeAnchor = useActiveSection(isHome ? anchorIds : []);
+  const routeMatch = NAV_ITEMS.find((i) => i.type === 'route' && i.path === location.pathname);
+  const active = !isHome && routeMatch ? routeMatch.id : activeAnchor;
   const wrapRef = useRef(null);
   const itemRefs = useRef({});
   const [pill, setPill] = useState({ left: 0, width: 0, opacity: 0 });
@@ -193,10 +208,23 @@ const Nav = ({ onCta }) => {
     setPill({ left: r.left - w.left, width: r.width, opacity: 1 });
   }, [active]);
 
-  const handleNavClick = (e, id) => {
+  const handleAnchorClick = (e, id) => {
     e.preventDefault();
-    scrollToId(lenis, id);
-    history.replaceState(null, '', `#${id}`);
+    if (isHome) {
+      scrollToId(lenis, id);
+      history.replaceState(null, '', `#${id}`);
+    } else {
+      navigate(`/#${id}`);
+    }
+  };
+
+  const handleLogoClick = (e) => {
+    if (isHome) {
+      e.preventDefault();
+      scrollToId(lenis, 'top');
+      history.replaceState(null, '', '#top');
+    }
+    // else: let <Link> navigate home
   };
 
   return (
@@ -206,9 +234,9 @@ const Nav = ({ onCta }) => {
       }`}
     >
       <div className="max-w-[1400px] mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
-        <a
-          href="#top"
-          onClick={(e) => handleNavClick(e, 'top')}
+        <Link
+          to="/"
+          onClick={handleLogoClick}
           className="group inline-flex items-center"
           aria-label="WARD — home"
         >
@@ -226,7 +254,7 @@ const Nav = ({ onCta }) => {
               maskPosition: 'left center',
             }}
           />
-        </a>
+        </Link>
 
         <div ref={wrapRef} className="relative hidden sm:flex items-center">
           {/* Sliding active pill */}
@@ -240,27 +268,42 @@ const Nav = ({ onCta }) => {
               transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           />
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.id}
-              ref={(el) => (itemRefs.current[item.id] = el)}
-              href={`#${item.id}`}
-              onClick={(e) => handleNavClick(e, item.id)}
-              className={`relative z-10 text-sm px-3 py-1.5 transition-colors duration-200 ${
-                active === item.id ? 'text-accent-700' : 'text-ink-700 hover:text-ink-900'
-              }`}
-            >
-              {item.label}
-            </a>
-          ))}
-          <a
-            href="https://portfolio.markwarddesign.com/"
-            target="_blank"
-            rel="noreferrer"
-            className="relative z-10 hidden md:inline-flex items-center gap-1 text-sm text-ink-700 hover:text-ink-900 px-3 py-1.5 ml-1"
-          >
-            Writing <ArrowUpRight size={12} />
-          </a>
+          {NAV_ITEMS.map((item) => {
+            const isActive = active === item.id;
+            const className = `relative z-10 text-sm px-3 py-1.5 transition-colors duration-200 ${
+              isActive ? 'text-accent-700' : 'text-ink-700 hover:text-ink-900'
+            }`;
+            if (item.type === 'route') {
+              return (
+                <Link
+                  key={item.id}
+                  ref={(el) => (itemRefs.current[item.id] = el)}
+                  to={item.path}
+                  onClick={() => {
+                    // Same-route click should still return to top.
+                    if (location.pathname === item.path) {
+                      if (lenis) lenis.scrollTo(0);
+                      else window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                  className={className}
+                >
+                  {item.label}
+                </Link>
+              );
+            }
+            return (
+              <a
+                key={item.id}
+                ref={(el) => (itemRefs.current[item.id] = el)}
+                href={`#${item.id}`}
+                onClick={(e) => handleAnchorClick(e, item.id)}
+                className={className}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </div>
 
         <PillButton variant="solid" onClick={onCta} className="!py-2 !px-4 !text-sm ml-3">
@@ -343,7 +386,7 @@ const Hero = ({ onCta, onWorkCta }) => (
 
 /* ---------- triptych: three offer paths ---------- */
 
-const PathPanel = ({ kicker, title, who, body, timeline, starting, tags, ctaLabel, onCta, slots, dark, tint, accentClass = 'text-accent' }) => {
+const PathPanel = ({ kicker, title, who, body, timeline, starting, tags, ctaLabel, onCta, slots, dark, tint, accentClass = 'text-accent', serviceId }) => {
   const bg = dark
     ? 'bg-ink-900 text-paper-50'
     : tint === 'warm'
@@ -364,7 +407,11 @@ const PathPanel = ({ kicker, title, who, body, timeline, starting, tags, ctaLabe
     </div>
 
     <h3 className={`font-display font-medium text-4xl lg:text-5xl leading-[1] tracking-tighter2 mb-4 ${dark ? 'text-paper-50' : 'text-ink-900'}`}>
-      {title}
+      {serviceId ? (
+        <Link to={`/services#${serviceId}`} className={`transition-colors hover:${accentClass}`}>
+          {title}
+        </Link>
+      ) : title}
     </h3>
     <p className={`text-sm mb-6 ${dark ? 'text-paper-200/70' : 'text-ink-quiet'}`}>For {who}</p>
     <p className={`leading-relaxed mb-10 ${dark ? 'text-paper-200/90' : 'text-ink-soft'}`}>{body}</p>
@@ -410,11 +457,20 @@ const Triptych = ({ onSelect }) => (
   <section id="engage" className="relative">
     <div className="max-w-[1400px] mx-auto px-6 lg:px-10 pt-24 lg:pt-32 pb-10">
       <Reveal as="div" className="max-w-3xl">
-        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet mb-4">Three ways to work together</div>
+        <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet mb-4">Five ways to work together</div>
         <h2 className="font-display font-medium text-4xl lg:text-6xl leading-[1.02] tracking-tighter2">
           Pick the one that fits<br />
           <em className="italic font-normal text-ink-soft">where you actually are.</em>
         </h2>
+        <div className="mt-6">
+          <Link
+            to="/services"
+            className="group inline-flex items-center gap-2 text-sm font-medium text-accent underline decoration-accent/30 decoration-1 underline-offset-[6px] hover:decoration-accent transition-colors"
+          >
+            See the full breakdown
+            <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
       </Reveal>
     </div>
 
@@ -423,6 +479,7 @@ const Triptych = ({ onSelect }) => (
         <div className="grid lg:grid-cols-3 border-y border-ink-900/15">
           <div className="border-r-0 lg:border-r border-ink-900/15">
             <PathPanel
+              serviceId="website"
               tint="warm"
               accentClass="text-warm"
               kicker="01 · Fixed slot"
@@ -439,6 +496,7 @@ const Triptych = ({ onSelect }) => (
           </div>
           <div className="border-r-0 lg:border-r border-ink-900/15 border-t lg:border-t-0">
             <PathPanel
+              serviceId="mvp"
               tint="sage"
               accentClass="text-sage"
               kicker="02 · Fixed scope"
@@ -454,6 +512,7 @@ const Triptych = ({ onSelect }) => (
           </div>
           <div className="border-t lg:border-t-0">
             <PathPanel
+              serviceId="application"
               dark
               kicker="03 · Partnership"
               title="Application"
@@ -728,8 +787,8 @@ const Philosophy = () => (
       </Reveal>
       <div className="lg:col-span-9 space-y-8">
         <Reveal as="h2" className="font-display font-medium text-3xl lg:text-5xl leading-[1.08] tracking-tighter2 max-w-3xl">
-          I care about architecture, clean documentation, developer experience,
-          and <em className="italic font-normal text-accent">never missing a launch date.</em>
+          I care about my clients, and I treat their products
+          <em className="italic font-normal text-accent"> like they're my own.</em>
         </Reveal>
         <Reveal as="div" delay={100} className="grid md:grid-cols-2 gap-x-12 gap-y-6 text-ink-soft leading-relaxed max-w-3xl">
           <p>
@@ -939,7 +998,7 @@ const BlueprintGenerator = () => {
 
 /* ---------- contact ---------- */
 
-const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSelectedBudget }) => (
+export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSelectedBudget }) => (
   <section id="contact" className="py-24 lg:py-32">
     <div className="max-w-[1100px] mx-auto px-6 lg:px-10 grid lg:grid-cols-12 gap-12">
       <Reveal as="div" className="lg:col-span-5">
@@ -1024,24 +1083,35 @@ const Footer = () => (
       </div>
       <div className="mt-16 pt-8 border-t border-paper-50/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-sm text-paper-200/70">
         <div>© {new Date().getFullYear()} Mark Ward. All rights reserved.</div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 flex-wrap">
+          <a href="https://portfolio.markwarddesign.com/" target="_blank" rel="noreferrer" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2">Writing <ArrowUpRight size={14} /></a>
           <a href="#" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2"><Github size={16} /> GitHub</a>
           <a href="#" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2"><Linkedin size={16} /> LinkedIn</a>
-          <a href="#contact" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2"><Mail size={16} /> Contact</a>
+          <Link to="/contact" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2"><Mail size={16} /> Contact</Link>
         </div>
       </div>
     </div>
   </footer>
 );
 
-/* ---------- app ---------- */
+/* ---------- home page ---------- */
 
-export default function App() {
+function Home() {
   const [selectedStage, setSelectedStage] = useState('');
   const [selectedBudget, setSelectedBudget] = useState('');
 
-  const lenis = useLenisInit();
+  const lenis = useLenis();
   const scrollTo = (id) => scrollToId(lenis, id);
+  const location = useLocation();
+
+  // Handle hash scrolling when arriving from another route (e.g. /#contact)
+  useEffect(() => {
+    if (!location.hash) return;
+    const id = location.hash.slice(1);
+    // Defer until layout + Lenis are ready
+    const t = setTimeout(() => scrollToId(lenis, id), 80);
+    return () => clearTimeout(t);
+  }, [location.hash, lenis]);
 
   const handleServiceCta = (stage, budget) => {
     setSelectedStage(stage);
@@ -1050,25 +1120,134 @@ export default function App() {
   };
 
   return (
-    <LenisContext.Provider value={lenis}>
-      <div className="bg-paper text-ink-900 min-h-screen">
-        <Nav onCta={() => scrollTo('contact')} />
-        <main>
-          <Hero onCta={() => scrollTo('contact')} onWorkCta={() => scrollTo('work')} />
-          <Triptych onSelect={handleServiceCta} />
-          <Work />
-          <HowIWork />
-          <Philosophy />
-          <BlueprintGenerator />
-          <Contact
-            selectedStage={selectedStage}
-            setSelectedStage={setSelectedStage}
-            selectedBudget={selectedBudget}
-            setSelectedBudget={setSelectedBudget}
+    <>
+      <Hero onCta={() => scrollTo('contact')} onWorkCta={() => scrollTo('work')} />
+      <Triptych onSelect={handleServiceCta} />
+      <Work />
+      <SeeAllWorkLink />
+      <AboutTeaser />
+      <BlueprintGenerator />
+      <Contact
+        selectedStage={selectedStage}
+        setSelectedStage={setSelectedStage}
+        selectedBudget={selectedBudget}
+        setSelectedBudget={setSelectedBudget}
+      />
+    </>
+  );
+}
+
+/* ---------- home teaser blocks ---------- */
+
+const SeeAllWorkLink = () => (
+  <section className="bg-paper pb-20 lg:pb-28 -mt-8">
+    <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
+      <Reveal as="div" className="flex items-center justify-end">
+        <Link
+          to="/work"
+          className="group inline-flex items-center gap-2 text-sm font-medium text-accent underline decoration-accent/30 decoration-1 underline-offset-[6px] hover:decoration-accent transition-colors"
+        >
+          See all work
+          <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+        </Link>
+      </Reveal>
+    </div>
+  </section>
+);
+
+const AboutTeaser = () => (
+  <section className="py-24 lg:py-32 bg-paper-200/40 border-y border-ink-900/10">
+    <div className="max-w-[1400px] mx-auto px-6 lg:px-10 grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+      <Reveal as="div" className="lg:col-span-4">
+        <figure className="relative max-w-[280px]">
+          <div className="absolute -inset-3 bg-accent/8 -z-10 rounded-sm" aria-hidden="true" />
+          <img
+            src="/mark-headshot.jpg"
+            alt="Mark Ward"
+            className="block w-full aspect-[4/5] object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm"
           />
-        </main>
-        <Footer />
+          <figcaption className="mt-4 text-xs text-ink-quiet font-mono">
+            Mark Ward<span className="text-accent"> · </span>principal engineer
+          </figcaption>
+        </figure>
+      </Reveal>
+      <div className="lg:col-span-8 space-y-6">
+        <Reveal as="div" className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
+          About
+        </Reveal>
+        <Reveal as="h2" delay={80} className="font-display font-medium text-3xl lg:text-5xl leading-[1.05] tracking-tighter2 max-w-3xl">
+          I care about my clients, and I treat their products
+          <em className="italic font-normal text-accent"> like they’re my own.</em>
+        </Reveal>
+        <Reveal as="p" delay={140} className="text-lg text-ink-soft leading-relaxed max-w-2xl">
+          Fifteen years of production work. Three co-founded SaaS products. Senior judgment on
+          every hour you pay for — because the work I take on is the work I’d want done right
+          if it were my own company.
+        </Reveal>
+        <Reveal as="div" delay={200}>
+          <Link
+            to="/about"
+            className="group inline-flex items-center gap-2 text-sm font-medium text-accent underline decoration-accent/30 decoration-1 underline-offset-[6px] hover:decoration-accent transition-colors"
+          >
+            More about how I work
+            <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </Reveal>
       </div>
+    </div>
+  </section>
+);
+
+/* ---------- app shell ---------- */
+
+function AppShell() {
+  const lenis = useLenis();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const goToContact = () => {
+    if (location.pathname === '/') scrollToId(lenis, 'contact');
+    else navigate('/#contact');
+  };
+
+  // Scroll to top on route change (unless arriving with a hash; hash handling
+  // belongs to the destination page so it can wait for layout).
+  useEffect(() => {
+    if (location.hash) return;
+    if (lenis) lenis.scrollTo(0, { immediate: true });
+    else window.scrollTo(0, 0);
+  }, [location.pathname, location.hash, lenis]);
+
+  return (
+    <div className="bg-paper text-ink-900 min-h-screen">
+      <Nav onCta={goToContact} />
+      <main>
+        <div key={location.pathname} className="page-fade">
+          <Routes location={location}>
+            <Route path="/" element={<Home />} />
+            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/work" element={<WorkPage />} />
+            <Route path="/apps" element={<AppsPage />} />
+            <Route path="/apps/:slug" element={<CaseStudy type="apps" />} />
+            <Route path="/websites" element={<WebsitesPage />} />
+            <Route path="/websites/:slug" element={<CaseStudy type="websites" />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+          </Routes>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+export default function App() {
+  const lenis = useLenisInit();
+  return (
+    <LenisContext.Provider value={lenis}>
+      <BrowserRouter>
+        <AppShell />
+      </BrowserRouter>
     </LenisContext.Provider>
   );
 }
+
