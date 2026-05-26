@@ -879,6 +879,11 @@ const BlueprintGenerator = () => {
     setBlueprint(null);
 
     const workerUrl = import.meta.env.VITE_GEMINI_WORKER_URL;
+    if (!workerUrl) {
+      setError("AI is offline in this environment (VITE_GEMINI_WORKER_URL not set).");
+      setLoading(false);
+      return;
+    }
 
     const prompt = `
       Act as a Senior Software Architect working directly with founders.
@@ -908,6 +913,10 @@ const BlueprintGenerator = () => {
     `;
 
     try {
+      // Worker is the shared Gemini proxy (same one used by the portfolio).
+      // It returns an SSE stream from streamGenerateContent?alt=sse — accumulate
+      // text chunks then JSON.parse the final result (Gemini honors
+      // responseMimeType: 'application/json' so the assembled text is valid JSON).
       const response = await fetch(workerUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -917,11 +926,36 @@ const BlueprintGenerator = () => {
         }),
       });
       if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData?.error?.message || `API error ${response.status}`);
+        const errText = await response.text().catch(() => '');
+        throw new Error(`API error ${response.status}${errText ? `: ${errText.slice(0, 120)}` : ''}`);
       }
-      const data = await response.json();
-      const result = JSON.parse(data.candidates[0].content.parts[0].text);
+      if (!response.body) throw new Error('Empty response');
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let fullText = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (!data || data === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(data);
+            const chunk = parsed.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            fullText += chunk;
+          } catch (_) {}
+        }
+      }
+
+      if (!fullText) throw new Error('No content returned');
+      const result = JSON.parse(fullText);
       setBlueprint(result);
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
