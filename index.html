@@ -10,6 +10,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+
+    <!-- Google Analytics (GA4) — manual page_view on SPA route changes; see src/lib/analytics.js -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z7XBV351E0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      // send_page_view: false — we fire page_view manually so React Router navigations get tracked too
+      gtag('config', 'G-Z7XBV351E0', { send_page_view: false });
+      window.gtag = gtag;
+    </script>
     <title>Mark Ward — Principal Software Engineer</title>
     <script>
       // Apply theme before first paint to prevent a flash.

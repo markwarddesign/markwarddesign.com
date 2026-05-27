@@ -8,6 +8,7 @@ import ServicesPage from './pages/Services.jsx';
 import ContactPage from './pages/Contact.jsx';
 import WorkPage from './pages/Work.jsx';
 import AboutPage from './pages/About.jsx';
+import { trackPageView, trackEvent } from './lib/analytics.js';
 import {
   ArrowUpRight,
   ArrowRight,
@@ -878,10 +879,12 @@ const BlueprintGenerator = () => {
     setLoading(true);
     setError('');
     setBlueprint(null);
+    trackEvent('blueprint_generate_attempt', { idea_length: idea.trim().length });
 
     const workerUrl = import.meta.env.VITE_GEMINI_WORKER_URL;
     if (!workerUrl) {
       setError("AI is offline in this environment (VITE_GEMINI_WORKER_URL not set).");
+      trackEvent('blueprint_generate_error', { reason: 'no-worker-url' });
       setLoading(false);
       return;
     }
@@ -958,8 +961,13 @@ const BlueprintGenerator = () => {
       if (!fullText) throw new Error('No content returned');
       const result = JSON.parse(fullText);
       setBlueprint(result);
+      trackEvent('blueprint_generate_success', {
+        timeline: result?.timeline,
+        challenges_count: Array.isArray(result?.challenges) ? result.challenges.length : 0,
+      });
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.');
+      trackEvent('blueprint_generate_error', { reason: err?.message || 'unknown' });
     } finally {
       setLoading(false);
     }
@@ -1216,6 +1224,10 @@ export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSe
     const honeypot = form.elements.company_url?.value || '';
 
     setStatus('sending');
+    trackEvent('contact_submit_attempt', {
+      stage: selectedStage || '(none)',
+      budget: selectedBudget || '(none)',
+    });
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -1265,6 +1277,7 @@ export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSe
 
         setErrorMessage(msg);
         setStatus('error');
+        trackEvent('contact_submit_error', { status: res.status, error: data.error || 'unknown' });
         // Log full response for deeper diagnosis
         // eslint-disable-next-line no-console
         console.error('[contact] submit failed', { status: res.status, data, rawText });
@@ -1272,6 +1285,10 @@ export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSe
         return;
       }
       setStatus('sent');
+      trackEvent('contact_submit_success', {
+        stage: selectedStage || '(none)',
+        budget: selectedBudget || '(none)',
+      });
       setName(''); setEmail(''); setMessage('');
       setSelectedStage(''); setSelectedBudget('');
       resetTurnstile();
@@ -1280,6 +1297,7 @@ export const Contact = ({ selectedStage, setSelectedStage, selectedBudget, setSe
       console.error('[contact] network error', err);
       setErrorMessage(`Network error: ${err?.message || 'request failed'}`);
       setStatus('error');
+      trackEvent('contact_submit_error', { status: 'network', error: err?.message || 'request failed' });
       resetTurnstile();
     }
   };
@@ -1583,6 +1601,15 @@ function AppShell() {
     if (lenis) lenis.scrollTo(0, { immediate: true });
     else window.scrollTo(0, 0);
   }, [location.pathname, location.hash, lenis]);
+
+  // GA4 — fire page_view on every route change. Defer one tick so pages have
+  // a chance to set document.title via their useEffect first.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      trackPageView(location.pathname + location.search, document.title);
+    }, 0);
+    return () => clearTimeout(t);
+  }, [location.pathname, location.search]);
 
   return (
     <div className="bg-paper text-ink-900 min-h-screen">
