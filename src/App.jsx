@@ -1450,7 +1450,7 @@ const Footer = () => (
       <div className="mt-16 pt-8 border-t border-paper-50/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-sm text-paper-200/70">
         <div>© {new Date().getFullYear()} Mark Ward. All rights reserved.</div>
         <div className="flex items-center gap-6 flex-wrap">
-          <a href="https://portfolio.markward.dev/" target="_blank" rel="noreferrer" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2">Writing <ArrowUpRight size={14} /></a>
+          <a href="https://portfolio.markwarddesign.com/" target="_blank" rel="noreferrer" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2">Writing <ArrowUpRight size={14} /></a>
           <a href="#" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2"><Github size={16} /> GitHub</a>
           <a href="#" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2"><Linkedin size={16} /> LinkedIn</a>
           <Link to="/contact" className="hover:text-paper-50 transition-colors inline-flex items-center gap-2"><Mail size={16} /> Contact</Link>
