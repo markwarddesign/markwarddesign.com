@@ -357,6 +357,42 @@ const Nav = ({ onCta, theme, onToggleTheme }) => {
 
 /* ---------- hero ---------- */
 
+const LEAD_PHRASES = [
+  'You bring the ambition. I bring fifteen years of making it real.',
+  "Let's build something worth keeping.",
+  "Bring me the hard problem — I'll bring the solution.",
+  "Clear thinking, solid software, and a team you can count on.",
+];
+
+const RotatingLead = () => {
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const id = setInterval(
+      () => setActive((n) => (n + 1) % LEAD_PHRASES.length),
+      4200,
+    );
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <div
+      className="lead-stack text-2xl sm:text-[1.7rem] font-medium leading-snug tracking-tightish text-ink-900"
+      aria-live="polite"
+    >
+      {LEAD_PHRASES.map((phrase, i) => (
+        <span
+          key={i}
+          className="lead-phrase"
+          data-active={i === active}
+          aria-hidden={i !== active}
+        >
+          {phrase}
+        </span>
+      ))}
+    </div>
+  );
+};
+
 const Hero = ({ onCta, onWorkCta }) => (
   <section id="top" className="relative pt-32 pb-24 lg:pt-44 lg:pb-32">
     <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
@@ -374,7 +410,7 @@ const Hero = ({ onCta, onWorkCta }) => (
             ].flatMap((line, li, lines) => {
               const prevCount = lines.slice(0, li).reduce((n, l) => n + l.length, 0);
               return [
-                <span key={`line-${li}`} className="block overflow-hidden pb-[0.05em]">
+                <span key={`line-${li}`} className="inline lg:block lg:overflow-hidden lg:pb-[0.05em]">
                   {line.map((word, wi) => {
                     const italic = word.startsWith('*');
                     const text = italic ? word.slice(1) : word;
@@ -391,13 +427,19 @@ const Hero = ({ onCta, onWorkCta }) => (
                     );
                   })}
                 </span>,
+                /* breakable space between lines so they flow naturally on mobile,
+                   where lines are inline; ignored when lines are block (lg+) */
+                li < lines.length - 1 ? ' ' : null,
               ];
             })}
           </h1>
-          <Reveal as="p" delay={120} className="mt-10 max-w-xl text-lg leading-relaxed text-ink-soft">
-            I'm Mark Ward — Lead Developer at Third &amp; Grove and co-founder of three SaaS
-            products (CropAide, MILES, ProjectAire). Fifteen-plus years of production work
-            has given me a pretty clear sense of what matters and what's just noise.
+          <Reveal as="div" delay={120} className="mt-10 max-w-xl">
+            <RotatingLead />
+            <p className="mt-5 text-lg leading-relaxed text-ink-soft">
+              I'm Mark Ward — Lead Developer at Third &amp; Grove and co-founder of three SaaS
+              products (CropAide, MILES, ProjectAire). I know what matters in a build, and
+              what's just noise.
+            </p>
           </Reveal>
           <Reveal as="div" delay={200} className="mt-10 flex flex-wrap items-center gap-4">
             <PillButton variant="accent" onClick={onCta}>

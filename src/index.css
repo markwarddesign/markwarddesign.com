@@ -152,6 +152,28 @@ body {
   .word-rise { animation: none; opacity: 1; transform: none; }
 }
 
+/* Rotating lead — all phrases share one grid cell so height stays stable
+   (sized to the tallest phrase) while the active one crossfades in. */
+.lead-stack {
+  display: grid;
+}
+.lead-stack > .lead-phrase {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.lead-stack > .lead-phrase[data-active='true'] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lead-stack > .lead-phrase { transition: none; }
+}
+
 /* Route transition fade */
 @keyframes page-fade {
   from { opacity: 0; transform: translateY(8px); }
