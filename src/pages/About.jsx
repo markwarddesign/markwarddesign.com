@@ -95,28 +95,25 @@ export default function About() {
         </div>
       </section>
 
-      {/* ---------- bio + headshot ---------- */}
-      <section className="pb-20 lg:pb-28">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-10 grid lg:grid-cols-12 gap-10 lg:gap-16">
-          <Reveal as="div" className="lg:col-span-4">
-            <figure className="relative">
-              <div className="absolute -inset-3 bg-accent/8 -z-10 rounded-sm" aria-hidden="true" />
-              <img
-                src="/mark-headshot.jpg"
-                alt="Mark Ward"
-                className="block w-full max-w-[360px] aspect-[4/5] object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm"
-              />
-              <figcaption className="mt-4 text-xs text-ink-quiet font-mono">
-                Mark Ward<span className="text-accent"> · </span>principal engineer
-              </figcaption>
-            </figure>
+      {/* ---------- bio ---------- */}
+      <section className="py-20 lg:py-28 bg-paper-200/40 border-t border-ink-900/15">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-10 space-y-14 lg:space-y-20">
+          {/* Centered quote */}
+          <Reveal as="blockquote" className="text-center max-w-2xl mx-auto">
+            <p className="font-display font-normal italic text-2xl lg:text-[2rem] leading-[1.2] tracking-tighter2 text-ink-900">
+              &ldquo;Whatever is worth doing at all is worth doing well.&rdquo;
+            </p>
+            <footer className="mt-5 font-mono text-xs text-ink-quiet uppercase tracking-[0.2em]">
+              — Philip Stanhope
+            </footer>
           </Reveal>
-          <div className="lg:col-span-8 space-y-8">
-            <Reveal as="h2" className="font-display font-medium text-3xl lg:text-5xl leading-[1.05] tracking-tighter2 max-w-3xl">
+          {/* h2 + body */}
+          <div className="border-t border-ink-900/10 pt-14 lg:pt-20 grid lg:grid-cols-12 gap-10 lg:gap-16">
+            <Reveal as="h2" className="lg:col-span-5 font-display font-medium text-3xl lg:text-5xl leading-[1.05] tracking-tighter2">
               I care about my clients, and I treat their products
               <em className="italic font-normal text-accent"> like they’re my own.</em>
             </Reveal>
-            <Reveal as="div" delay={100} className="space-y-5 text-ink-soft leading-relaxed text-lg max-w-3xl">
+            <Reveal as="div" delay={100} className="lg:col-span-7 space-y-5 text-ink-soft leading-relaxed text-lg">
               <p>
                 I’m Mark — Lead Developer at Third &amp; Grove, where I’ve shipped production
                 systems for national brands and led teams of up to seven engineers. On the side,

@@ -309,7 +309,7 @@ const Nav = ({ onCta, theme, onToggleTheme }) => {
           {NAV_ITEMS.map((item) => {
             const isActive = active === item.id;
             const className = `relative z-10 text-sm px-3 py-1.5 transition-colors duration-200 ${
-              isActive ? 'text-accent-700 dark:text-paper-50' : 'text-ink-700 hover:text-ink-900'
+              isActive ? 'text-accent-700 dark:text-ink-900' : 'text-ink-700 hover:text-ink-900'
             }`;
             if (item.type === 'route') {
               return (
@@ -856,17 +856,15 @@ const Philosophy = () => (
     <div className="max-w-[1400px] mx-auto px-6 lg:px-10 grid lg:grid-cols-12 gap-12">
       <Reveal as="div" className="lg:col-span-3">
         <div className="font-mono text-[10px] uppercase tracking-[0.2em] text-ink-quiet mb-6">About</div>
-        <figure className="relative">
+        <blockquote className="relative">
           <div className="absolute -inset-3 bg-accent/8 -z-10 rounded-sm" aria-hidden="true" />
-          <img
-            src="/mark-headshot.jpg"
-            alt="Mark Ward"
-            className="block w-full max-w-[260px] aspect-[4/5] object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm"
-          />
-          <figcaption className="mt-4 text-xs text-ink-quiet font-mono">
-            Mark Ward<span className="text-accent"> · </span>principal engineer
-          </figcaption>
-        </figure>
+          <p className="font-display text-xl lg:text-2xl leading-[1.22] tracking-tighter2 text-ink-900">
+            "Whatever is worth doing at all is worth doing well."
+          </p>
+          <footer className="mt-6 font-mono text-xs text-ink-quiet uppercase tracking-[0.18em]">
+            Philip Stanhope
+          </footer>
+        </blockquote>
       </Reveal>
       <div className="lg:col-span-9 space-y-8">
         <Reveal as="h2" className="font-display font-medium text-3xl lg:text-5xl leading-[1.08] tracking-tighter2 max-w-3xl">
@@ -1585,17 +1583,15 @@ const AboutTeaser = () => (
   <section className="py-24 lg:py-32 bg-paper-200/40 border-y border-ink-900/10">
     <div className="max-w-[1400px] mx-auto px-6 lg:px-10 grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
       <Reveal as="div" className="lg:col-span-4">
-        <figure className="relative max-w-[280px]">
+        <blockquote className="relative max-w-[280px]">
           <div className="absolute -inset-3 bg-accent/8 -z-10 rounded-sm" aria-hidden="true" />
-          <img
-            src="/mark-headshot.jpg"
-            alt="Mark Ward"
-            className="block w-full aspect-[4/5] object-cover grayscale hover:grayscale-0 transition-all duration-500 rounded-sm"
-          />
-          <figcaption className="mt-4 text-xs text-ink-quiet font-mono">
-            Mark Ward<span className="text-accent"> · </span>principal engineer
-          </figcaption>
-        </figure>
+          <p className="font-display text-xl lg:text-2xl leading-[1.22] tracking-tighter2 text-ink-900">
+            "Whatever is worth doing at all is worth doing well."
+          </p>
+          <footer className="mt-6 font-mono text-xs text-ink-quiet uppercase tracking-[0.18em]">
+            Philip Stanhope
+          </footer>
+        </blockquote>
       </Reveal>
       <div className="lg:col-span-8 space-y-6">
         <Reveal as="div" className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
