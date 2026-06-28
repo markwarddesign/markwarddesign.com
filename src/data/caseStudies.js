@@ -231,6 +231,73 @@ export const APP_STUDIES = [
 
 export const SITE_STUDIES = [
   {
+    slug: 'heart-of-jerome',
+    type: 'websites',
+    kicker: 'Civic initiative · Community',
+    title: 'The Heart of Jerome',
+    subtitle: 'A community kindness campaign with a live, public counter — designed from the logo up.',
+    role: 'Logo, design & build',
+    client: 'The Heart of Jerome',
+    href: 'https://heartofjerome.com/',
+    accentClass: 'text-warm',
+    tint: 'warm',
+    hireFor: 'Civic & nonprofit sites · Campaign microsites · Logo & brand identity',
+    pitch:
+      'Jerome, Idaho\'s part of the America250 celebration — a campaign to log 2,500 acts of kindness across the Magic Valley by July 4, 2026. Built from a blank page and a new logo into a live site where every act gets counted in public.',
+    metaDescription:
+      'The Heart of Jerome — a civic kindness campaign site I branded and built for Idaho\'s America250 / HCR 22 initiative. Custom logo, a public acts-of-kindness counter, and a one-minute logging flow.',
+    stats: [
+      { label: 'Goal', value: '2,500 acts' },
+      { label: 'Counter', value: 'Live · public' },
+      { label: 'Type', value: 'React + brand identity' },
+    ],
+    situation: {
+      heading: 'The situation',
+      body: [
+        'Jerome signed on to America250 and Idaho\'s HCR 22 resolution with a goal that\'s easy to say and hard to make real: foster 2,500 acts of kindness across the Magic Valley by July 4, 2026. A goal like that dies on a flyer — it needed a home where the community could actually see itself making progress.',
+        'There was no brand and no site to build on. The campaign needed an identity people would recognize on a yard sign and a website that turned a civic resolution into something a neighbor could join in under a minute.',
+      ],
+    },
+    approach: {
+      heading: 'What I built',
+      body: [
+        'I designed the logo and brand first — a warm, heart-led mark that reads at a glance and carries the same dignity on a website header as it does on print. Everything downstream inherits that identity.',
+        'Then a campaign site built around a single, living number: a public counter that ticks up every time someone logs an act of kindness. The whole point of the campaign is momentum, so the progress toward 2,500 is the loudest thing on the page.',
+        'The logging flow is three steps and takes less than a minute — notice a moment of kindness, fill a short form, watch the counter grow. There\'s a "get ideas" path for people who want to participate but don\'t know where to start, and a clear way to reach the campaign\'s team leaders.',
+      ],
+    },
+    outcomes: {
+      heading: 'What it does',
+      body: [
+        'A campaign that has a face — one logo, one number, one obvious next step — instead of a resolution buried in meeting minutes.',
+        'A public counter that turns 2,500 from an abstract target into a shared scoreboard the whole Magic Valley can watch climb toward July 4, 2026.',
+        'A participation path so low-friction that "I should do something kind" becomes a logged act before the impulse fades.',
+      ],
+    },
+    pages: [
+      {
+        name: 'Hero & live counter',
+        screenshotLabel: 'Heart of Jerome · Hero',
+        copy: 'The mission and the running tally in the first screen — every visitor sees how close the community is to 2,500.',
+      },
+      {
+        name: 'Log an act',
+        screenshotLabel: 'Heart of Jerome · Log an act',
+        copy: 'Three steps, under a minute: notice a moment, fill a short form, watch the counter grow.',
+      },
+      {
+        name: 'Connect',
+        screenshotLabel: 'Heart of Jerome · Connect',
+        copy: 'A direct line to the campaign\'s team leaders for anyone who wants to get more involved.',
+      },
+    ],
+    stack: ['React', 'Tailwind', 'Vite', 'Brand identity'],
+    cta: {
+      heading: 'Civic campaign, nonprofit, or community initiative?',
+      body: 'If you\'ve got a mission and need it to feel real — a brand people recognize and a site that turns good intentions into action — this is the kind of work I do.',
+    },
+  },
+  {
     slug: 'dustin-edwards-fine-art',
     type: 'websites',
     kicker: 'Fine art portfolio',

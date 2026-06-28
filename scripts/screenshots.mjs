@@ -28,6 +28,7 @@ const TARGETS = [
   { slug: 'dealer-transparency', url: 'https://dealertransparency.com/' },
   { slug: 'conley-auto', url: 'https://markwarddesign.github.io/conleyauto/' },
   { slug: 'tbone-construction', url: 'https://markw1124.sg-host.com/' },
+  { slug: 'heart-of-jerome', url: 'https://heartofjerome.com/' },
   { slug: 'miles', url: 'https://miles.dealertransparency.com/', wait: 'domcontentloaded' },
   { slug: 'cropaide', url: 'https://cropaide.com/' },
   { slug: 'projectaire', url: 'https://projectaire.app/' },
